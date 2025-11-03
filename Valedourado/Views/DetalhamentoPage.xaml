@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:Valedourado.ViewModels"
+             x:Class="Valedourado.Views.DetalhamentoPage"
+             x:DataType="viewmodel:DetalhamentoViewModel"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto, *" RowSpacing="0" BackgroundColor="{StaticResource Primary}">
+        <Grid Grid.Row="0" Padding="15,20" ColumnDefinitions="Auto, *">
+            <Button Grid.Column="0" Text="‹ Voltar" Command="{Binding GoBackCommand}" Style="{StaticResource TransparentButton}"/>
+            <Label Grid.Column="1" Text="Detalhamento" Style="{StaticResource Title2}" TextColor="{StaticResource White}" HorizontalOptions="Center" VerticalOptions="Center"/>
+        </Grid>
+
+        <Border Grid.Row="1" BackgroundColor="{AppThemeBinding Light={StaticResource PageBackgroundColor}, Dark={StaticResource OffBlack}}" StrokeShape="RoundRectangle 30,30,0,0">
+            <ScrollView>
+                <VerticalStackLayout Spacing="15" Padding="25">
+
+                    <Border Padding="12,14" BackgroundColor="{StaticResource Primary}" StrokeShape="RoundRectangle 8">
+                        <Label Text="{Binding OrdemProducao, StringFormat='Ordem de Produção: {0}'}" Style="{StaticResource Body}" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
+                    </Border>
+
+                    <Border Style="{StaticResource InputContainer}">
+                        <Entry Placeholder="Operador" Text="{Binding Operador}" IsReadOnly="True"/>
+                    </Border>
+                    <Border Style="{StaticResource InputContainer}">
+                        <Picker Title="Selecione o Turno" ItemsSource="{Binding Turnos}" SelectedItem="{Binding SelectedTurno}"/>
+                    </Border>
+                    <Border Style="{StaticResource InputContainer}">
+                        <Entry Placeholder="Embalagens Processadas" Text="{Binding EmbProcessadas}" Keyboard="Numeric"/>
+                    </Border>
+                    <Border Style="{StaticResource InputContainer}">
+                        <Entry Placeholder="Embalagens Produzidas" Text="{Binding EmbProduzidas}" Keyboard="Numeric"/>
+                    </Border>
+                    <Border Style="{StaticResource InputContainer}">
+                        <Label Padding="0,14">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Embalagens Perdidas: " Style="{StaticResource Body}"/>
+                                    <Span Text="{Binding EmbPerdidas}" Style="{StaticResource Body}" FontAttributes="Bold" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </Border>
+
+                    <Button Text="Salvar Detalhamento" Command="{Binding SaveCommand}" Style="{StaticResource PrimaryButton}" Margin="0,20,0,0" />
+                </VerticalStackLayout>
+            </ScrollView>
+        </Border>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="Valedourado.Supervisor.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:Valedourado.Supervisor.Views"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    Shell.FlyoutBehavior="Disabled">
+
+    <Shell.Behaviors>
+        <toolkit:StatusBarBehavior StatusBarColor="{StaticResource White}" StatusBarStyle="DarkContent" />
+    </Shell.Behaviors>
+    <Shell.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Shell.Resources>
+
+    <TabBar>
+        <ShellContent
+            Title="Dashboard"
+            ContentTemplate="{DataTemplate views:HomePage}"
+            Route="HomePage">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="FontAwesome"
+                                 Glyph="&#xf3fd;" 
+                                 Color="{StaticResource White}"/>
+            </ShellContent.Icon>
+        </ShellContent>
+
+        <ShellContent
+            Title="Histórico"
+            ContentTemplate="{DataTemplate views:HistoricoPage}"
+            Route="HistoricoPage">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="FontAwesome"
+                                 Glyph="&#xf1da;"
+                                 Color="{StaticResource White}"/>
+            </ShellContent.Icon>
+        </ShellContent>
+    </TabBar>
+
+</Shell>

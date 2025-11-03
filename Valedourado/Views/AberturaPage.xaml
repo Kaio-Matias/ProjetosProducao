@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:Valedourado.ViewModels"
+             x:Class="Valedourado.Views.AberturaPage"
+             x:DataType="viewmodel:AberturaViewModel"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto, *" RowSpacing="0" BackgroundColor="{StaticResource Primary}">
+        <Grid Grid.Row="0" Padding="15,20" ColumnDefinitions="Auto, *">
+            <Button Grid.Column="0"
+                    Text="‹ Voltar"
+                    Command="{Binding GoBackCommand}"
+                    Style="{StaticResource TransparentButton}" />
+            <Label Grid.Column="1"
+                   Text="Abertura de Produção"
+                   Style="{StaticResource Title2}"
+                   TextColor="{StaticResource PrimaryText}"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+        </Grid>
+        <Border Grid.Row="1"
+                StrokeShape="RoundRectangle 30,30,0,0"
+                Background="{AppThemeBinding Light={StaticResource PageBackgroundColor}, Dark={StaticResource OffBlack}}">
+            <ScrollView>
+                <VerticalStackLayout Spacing="15" Padding="25">
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+
+                    <Border Style="{StaticResource InputContainer}">
+                        <Picker Title="Selecione o Produto"
+                                ItemsSource="{Binding Cadastros}"
+                                ItemDisplayBinding="{Binding Produto}"
+                                SelectedItem="{Binding SelectedCadastro}" />
+                    </Border>
+                    <Border Style="{StaticResource InputContainer}">
+                        <Entry Placeholder="Máquina" Text="{Binding Maquina}" IsReadOnly="True" />
+                    </Border>
+                    <Border Style="{StaticResource InputContainer}">
+                        <Entry Placeholder="Unidade" Text="{Binding Unidade}" IsReadOnly="True" />
+                    </Border>
+                    <Border Style="{StaticResource InputContainer}">
+                        <Entry Placeholder="Status" Text="{Binding Status}" IsReadOnly="True" />
+                    </Border>
+                    <Border Style="{StaticResource InputContainer}">
+                        <Entry Placeholder="Data/hora de Abertura" Text="{Binding DataHoraAbertura}" IsReadOnly="False" /> <!--Mudar para verdadeiro quando for para a data ficar fixa-->
+                    </Border>
+                    
+                    <Button Text="Abrir Produção"
+                            Command="{Binding OpenProductionCommand}"
+                            Style="{StaticResource PrimaryButton}"
+                            Margin="0,20,0,0" />
+                </VerticalStackLayout>
+            </ScrollView>
+        </Border>
+    </Grid>
+</ContentPage>

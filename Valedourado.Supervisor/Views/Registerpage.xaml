@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:Valedourado.Supervisor.ViewModels"
+             x:Class="Valedourado.Supervisor.Views.RegisterPage"
+             x:DataType="viewmodel:RegisterViewModel"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource Primary}">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid>
+        <ScrollView>
+            <VerticalStackLayout Spacing="15" Padding="30" VerticalOptions="Center">
+                <Label Text="Registro de Supervisor" Style="{StaticResource Title1}" TextColor="{StaticResource White}" HorizontalOptions="Center" Margin="0,0,0,20"/>
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="{StaticResource White}"/>
+
+                <Border Style="{StaticResource InputContainer}">
+                    <Entry Placeholder="Nome Completo" Text="{Binding Nome}" />
+                </Border>
+                <Border Style="{StaticResource InputContainer}">
+                    <Entry Placeholder="Matrícula" Text="{Binding Matricula}" Keyboard="Numeric" />
+                </Border>
+                <Border Style="{StaticResource InputContainer}">
+                    <Entry Placeholder="Cargo" Text="{Binding Cargo}" IsReadOnly="True" />
+                </Border>
+
+                <Button Text="Registrar" Command="{Binding RegisterCommand}" IsEnabled="{Binding IsNotBusy}" Style="{StaticResource PrimaryButton}" BackgroundColor="{StaticResource White}" TextColor="{StaticResource Primary}" Margin="0,20,0,0"/>
+                <Button Text="Voltar para Login" Command="{Binding GoBackCommand}" Style="{StaticResource TransparentButton}" TextColor="{StaticResource White}" />
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

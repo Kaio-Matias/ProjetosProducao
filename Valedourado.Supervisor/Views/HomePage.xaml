@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:Valedourado.Supervisor.ViewModels"
+             x:DataType="viewmodel:HomeViewModel"
+             x:Class="Valedourado.Supervisor.Views.HomePage"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto, *, Auto" Padding="20" RowSpacing="20" BackgroundColor="{StaticResource PageBackgroundColorLight}">
+
+        <HorizontalStackLayout Grid.Row="0" Spacing="15" VerticalOptions="Center">
+            <Image Source="logo_valedourado.png" HeightRequest="50" />
+            <VerticalStackLayout VerticalOptions="Center">
+
+                <Label Text="{Binding WelcomeMessage}" Style="{StaticResource Title2}" />
+
+                <Label Text="Selecione um módulo para começar" Style="{StaticResource Caption}" />
+            </VerticalStackLayout>
+        </HorizontalStackLayout>
+
+        <VerticalStackLayout Grid.Row="1" Spacing="15">
+            <Label Text="Módulos de Gestão" Style="{StaticResource Title1}" FontSize="22" Margin="0,10" />
+
+            <Border Style="{StaticResource Card}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoToConsultaCommand}" />
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="Auto, *" ColumnSpacing="20">
+                    <Image Grid.Column="0" VerticalOptions="Center">
+                        <Image.Source>
+                            <FontImageSource Glyph="&#xf002;" FontFamily="FontAwesome" Color="{StaticResource Primary}" Size="24"/>
+                        </Image.Source>
+                    </Image>
+                    <VerticalStackLayout Grid.Column="1">
+                        <Label Text="Consulta de OP's" Style="{StaticResource LabelBold}" FontSize="18"/>
+                        <Label Text="Visualize o histórico e detalhes de ordens fechadas." Style="{StaticResource Caption}"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoToGestaoCommand}" />
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="Auto, *" ColumnSpacing="20">
+                    <Image Grid.Column="0" VerticalOptions="Center">
+                        <Image.Source>
+                            <FontImageSource Glyph="&#xf0ae;" FontFamily="FontAwesome" Color="{StaticResource Primary}" Size="24"/>
+                        </Image.Source>
+                    </Image>
+                    <VerticalStackLayout Grid.Column="1">
+                        <Label Text="Gestão de OP's" Style="{StaticResource LabelBold}" FontSize="18"/>
+                        <Label Text="Acompanhe e gerencie as ordens em andamento." Style="{StaticResource Caption}"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+        </VerticalStackLayout>
+
+        <Button Grid.Row="2" 
+                Text="Sair" 
+                Style="{StaticResource DangerButton}" 
+                Command="{Binding LogoutCommand}"
+                VerticalOptions="End"/>
+
+    </Grid>
+</ContentPage>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:Valedourado.ViewModels"
+             x:Class="Valedourado.Views.HomePage"
+             x:DataType="viewmodel:HomeViewModel"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto, *"
+          BackgroundColor="{StaticResource Primary}"
+          Padding="0,20,0,0">
+
+        <Image Grid.Row="0"
+               Source="logo_valedourado.png"
+               HeightRequest="80"
+               Margin="0,20"/>
+
+        <Border Grid.Row="1"
+                BackgroundColor="{AppThemeBinding Light={StaticResource PageBackgroundColor}, Dark={StaticResource OffBlack}}"
+                StrokeShape="RoundRectangle 30,30,0,0">
+            <ScrollView>
+                <VerticalStackLayout Padding="25" Spacing="20">
+                    <Label Text="Gestão de Produção"
+                           Style="{StaticResource Title1}"
+                           HorizontalOptions="Center"
+                           Margin="0,10,0,10"/>
+
+                    <Grid ColumnDefinitions="*,*"
+                          RowDefinitions="Auto,Auto"
+                          ColumnSpacing="15"
+                          RowSpacing="15">
+
+                        <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource Card}">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding GoToCommand}" CommandParameter="AberturaPage" />
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="8" Padding="5">
+                                <Image Source="icon_play.png" HeightRequest="48"/>
+                                <Label Text="Abrir Produção" HorizontalOptions="Center" Style="{StaticResource Caption}" FontAttributes="Bold"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource Card}">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding GoToCommand}" CommandParameter="OpSelectionPage" />
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="8" Padding="5">
+                                <Image Source="icon_details.png" HeightRequest="48"/>
+                                <Label Text="Detalhamento" HorizontalOptions="Center" Style="{StaticResource Caption}" FontAttributes="Bold"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource Card}">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding GoToCommand}" CommandParameter="LossOpSelectionPage" />
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="8" Padding="5">
+                                <Image Source="icon_remove.png" HeightRequest="48"/>
+                                <Label Text="Registro Perdas" HorizontalOptions="Center" Style="{StaticResource Caption}" FontAttributes="Bold"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource Card}">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding GoToCommand}" CommandParameter="EfficiencyOpSelectionPage" />
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="8" Padding="3">
+                                <Image Source="icon_timer.png" HeightRequest="48"/>
+                                <Label Text="Registro Eficiência" HorizontalOptions="Center" Style="{StaticResource Caption}" FontAttributes="Bold"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <Button Text="Sair"
+                            Command="{Binding LogoutCommand}"
+                            Style="{StaticResource SecondaryButton}"
+                            Margin="20,40,20,0"/>
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </Border>
+    </Grid>
+</ContentPage>

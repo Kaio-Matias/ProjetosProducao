@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:Valedourado.ViewModels"
+             x:Class="Valedourado.Views.LoginPage"
+             x:DataType="viewmodel:LoginViewModel"
+             Shell.NavBarIsVisible="False">
+
+    <Grid BackgroundColor="{StaticResource Primary}">
+        <ScrollView>
+            <VerticalStackLayout Spacing="15"
+                                 Padding="30"
+                                 VerticalOptions="Center">
+
+                <Image Source="logo_valedourado.png"
+                       HeightRequest="90"
+                       HorizontalOptions="Center"
+                       Margin="0,20,0,10"/>
+
+                <Label Text="Controle de Produção"
+                       Style="{StaticResource Title2}"
+                       TextColor="{StaticResource PrimaryText}"
+                       HorizontalOptions="Center"
+                       Margin="0,0,0,20"/>
+
+                <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                   IsVisible="{Binding IsBusy}"
+                                   HorizontalOptions="Center"
+                                   Color="{StaticResource PrimaryText}"/>
+
+                <VerticalStackLayout IsVisible="{Binding IsLoginViewVisible}" Spacing="15">
+                    <Label Text="Login"
+                           Style="{StaticResource Title2}"
+                           TextColor="{StaticResource PrimaryText}"
+                           HorizontalOptions="Center"/>
+
+                    <Border Style="{StaticResource InputContainer}">
+                        <Entry Placeholder="Digite sua Matrícula"
+                               Text="{Binding MatriculaLogin}"
+                               Keyboard="Numeric"
+                               MaxLength="8" />
+                    </Border>
+
+                    <Button Text="Entrar"
+                            Command="{Binding ExecuteLoginCommand}"
+                            IsEnabled="{Binding IsNotBusy}"
+                            Style="{StaticResource PrimaryButton}"
+                            BackgroundColor="{StaticResource White}"
+                            TextColor="{StaticResource Primary}"/>
+
+                    <Label HorizontalOptions="Center" Margin="0,10,0,0">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Não tem uma conta? " TextColor="{StaticResource White}"/>
+                                <Span Text="Registre-se" TextColor="{StaticResource White}" FontAttributes="Bold" TextDecorations="Underline">
+                                    <Span.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding ToggleViewCommand}" />
+                                    </Span.GestureRecognizers>
+                                </Span>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout IsVisible="{Binding IsRegisterViewVisible}" Spacing="15">
+                    <Label Text="Registro de Operador"
+                           Style="{StaticResource Title2}"
+                           TextColor="{StaticResource PrimaryText}"
+                           HorizontalOptions="Center"/>
+
+                    <Border Style="{StaticResource InputContainer}">
+                        <Entry Placeholder="Nome Completo" Text="{Binding Nome}" />
+                    </Border>
+                    <Border Style="{StaticResource InputContainer}">
+                        <Entry Placeholder="Cargo" Text="{Binding Cargo}" />
+                    </Border>
+                    <Border Style="{StaticResource InputContainer}">
+                        <Entry Placeholder="Matrícula" Text="{Binding MatriculaRegistro}" Keyboard="Numeric" MaxLength="8" />
+                    </Border>
+                    <Button Text="Registrar"
+                            Command="{Binding ExecuteRegisterCommand}"
+                            IsEnabled="{Binding IsNotBusy}"
+                            Style="{StaticResource PrimaryButton}"
+                            BackgroundColor="{StaticResource White}"
+                            TextColor="{StaticResource Primary}"/>
+
+                    <Label HorizontalOptions="Center" Margin="0,10,0,0">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Já tem uma conta? " TextColor="{StaticResource White}"/>
+                                <Span Text="Entrar" TextColor="{StaticResource White}" FontAttributes="Bold" TextDecorations="Underline">
+                                    <Span.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding ToggleViewCommand}" />
+                                    </Span.GestureRecognizers>
+                                </Span>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

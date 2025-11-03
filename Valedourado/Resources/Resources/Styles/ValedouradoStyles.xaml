@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Style x:Key="CardView" TargetType="Frame">
+        <Setter Property="Padding" Value="15"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="HasShadow" Value="True"/>
+        <Setter Property="BorderColor" Value="{StaticResource Gray200}"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource White}"/>
+    </Style>
+
+    <Style x:Key="InputFrame" TargetType="Frame">
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="BorderColor" Value="{StaticResource Gray300}"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource White}"/>
+        <Setter Property="HasShadow" Value="False"/>
+    </Style>
+
+    <Style x:Key="MainActionButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
+        <Setter Property="TextColor" Value="{StaticResource White}"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="CornerRadius" Value="25"/>
+        <Setter Property="HeightRequest" Value="50"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+    </Style>
+
+    <Style x:Key="PrimaryAction" TargetType="Button" BasedOn="{StaticResource MainActionButton}" />
+
+    <Style x:Key="SecondaryAction" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource Gray200}"/>
+        <Setter Property="TextColor" Value="{StaticResource Gray900}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="CornerRadius" Value="8"/>
+    </Style>
+
+    <Style x:Key="BackButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="BorderWidth" Value="0"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="HorizontalOptions" Value="Start"/>
+    </Style>
+
+    <Style x:Key="TitleLabel" TargetType="Label">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+</ResourceDictionary>

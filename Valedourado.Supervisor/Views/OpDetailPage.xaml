@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:Valedourado.Supervisor.ViewModels"
+             xmlns:converters="clr-namespace:Valedourado.Supervisor.Converters"
+             xmlns:dto="clr-namespace:Valedourado.Shared.Dtos;assembly=Valedourado.Shared"
+             x:Class="Valedourado.Supervisor.Views.OpDetailPage"
+             x:DataType="viewmodel:OpDetailViewModel"
+             Title="{Binding OrdemProducao, StringFormat='Detalhes da OP {0}'}"
+             Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="10" Spacing="10">
+
+            <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" HorizontalOptions="Center" Margin="0,20"/>
+
+            <VerticalStackLayout Spacing="10" IsVisible="{Binding Relatorio, Converter={StaticResource IsNotNullConverter}}">
+
+                <Border Style="{StaticResource Card}">
+                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*, Auto" RowSpacing="8">
+                        <Label Grid.Row="0" Grid.Column="0" Text="{Binding Relatorio.InfoGeral.Produto}" Style="{StaticResource Title2}" VerticalOptions="Center"/>
+                        <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource Caption}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Abertura: "/>
+                                    <Span Text="{Binding Relatorio.InfoGeral.DataHoraAbertura, StringFormat='{0:dd/MM/yy HH:mm}'}"/>
+                                    <Span Text="  |  Fechamento: "/>
+                                    <Span Text="{Binding Relatorio.InfoGeral.DataHoraFechamento, StringFormat='{0:dd/MM/yy HH:mm}', TargetNullValue='-'}"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Border Grid.Row="0" Grid.Column="1" Padding="10,5" StrokeShape="RoundRectangle 8" BackgroundColor="{Binding Relatorio.InfoGeral.Status, Converter={StaticResource StatusToColorConverter}}">
+                            <Label Text="{Binding Relatorio.InfoGeral.Status}" TextColor="White" FontSize="12" FontAttributes="Bold" VerticalOptions="Center"/>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource Card}" IsVisible="{Binding Relatorio.Perdas, Converter={StaticResource ListHasItemsConverter}}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Registros de Perdas" Style="{StaticResource Title2}"/>
+                        <CollectionView ItemsSource="{Binding Relatorio.Perdas}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="dto:PerdasOpDto">
+                                    <Grid ColumnDefinitions="*, Auto, Auto" Padding="0,5">
+                                        <Label Grid.Column="0" Text="{Binding Motivo}" VerticalOptions="Center"/>
+                                        <Label Grid.Column="1" Text="{Binding Quantidade}" FontAttributes="Bold" VerticalOptions="Center" Margin="10,0"/>
+                                        <Label Grid.Column="2" Text="{Binding Operador}" Style="{StaticResource Caption}" VerticalOptions="Center"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Style="{StaticResource Card}" IsVisible="{Binding Relatorio.Paradas, Converter={StaticResource ListHasItemsConverter}}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Paradas de Eficiência" Style="{StaticResource Title2}"/>
+                        <CollectionView ItemsSource="{Binding Relatorio.Paradas}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="dto:EficienciaOpDto">
+                                    <Grid ColumnDefinitions="*, Auto, Auto" Padding="0,5">
+                                        <Label Grid.Column="0" Text="{Binding Motivo}" VerticalOptions="Center"/>
+                                        <Label Grid.Column="1" Text="{Binding Tempo, StringFormat='{0:hh\\:mm}'}" FontAttributes="Bold" VerticalOptions="Center" Margin="10,0"/>
+                                        <Label Grid.Column="2" Text="{Binding Operador}" Style="{StaticResource Caption}" VerticalOptions="Center"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Style="{StaticResource Card}" IsVisible="{Binding Relatorio.Paletes, Converter={StaticResource ListHasItemsConverter}}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="{Binding PaletesTitle}" Style="{StaticResource Title2}"/>
+
+                        <CollectionView ItemsSource="{Binding Relatorio.Paletes}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="dto:PaleteDto">
+                                    <Grid ColumnDefinitions="Auto, *, Auto" Padding="0,5">
+                                        <Label Grid.Column="0" Text="{Binding N_Palete, StringFormat='Palete {0:00}'}" FontAttributes="Bold" VerticalOptions="Center"/>
+
+                                        <Label Grid.Column="1" Text="{Binding QtdePorPalete, StringFormat='{0} unidades'}" HorizontalOptions="Center" VerticalOptions="Center"/>
+
+                                        <Label Grid.Column="2" Text="{Binding Usuario}" Style="{StaticResource Caption}" VerticalOptions="Center"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
+
+                <VerticalStackLayout Margin="0,10,0,0" Spacing="10">
+                    <Button Text="Fechar Ordem de Produção" 
+                            Command="{Binding FecharOpCommand}" 
+                            IsVisible="{Binding IsOpAberta}" 
+                            Style="{StaticResource DangerButton}"/>
+
+                    <Button Text="Compartilhar Relatório PDF" 
+                            Command="{Binding SharePdfCommand}" 
+                            Style="{StaticResource PrimaryButton}"/>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

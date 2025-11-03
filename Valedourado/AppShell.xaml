@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="Valedourado.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:Valedourado.Views"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    Title="Valedourado"
+    Shell.FlyoutBehavior="Disabled"
+    Shell.BackgroundColor="{StaticResource Primary}"
+    Shell.TitleColor="{StaticResource White}">
+    
+    <Shell.Behaviors>
+        <toolkit:StatusBarBehavior StatusBarColor="{StaticResource Primary}" StatusBarStyle="DarkContent" />
+    </Shell.Behaviors>
+    
+    <ShellContent
+        Title="Login"
+        ContentTemplate="{DataTemplate views:LoginPage}"
+        Route="LoginPage" />
+
+    <TabBar>
+        <ShellContent
+            Title="Início"
+            ContentTemplate="{DataTemplate views:HomePage}"
+            Route="HomePage" />
+    </TabBar>
+
+</Shell>

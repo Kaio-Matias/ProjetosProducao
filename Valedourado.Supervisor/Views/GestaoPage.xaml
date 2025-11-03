@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:dto="clr-namespace:Valedourado.Shared.Dtos;assembly=Valedourado.Shared"
+             xmlns:viewmodel="clr-namespace:Valedourado.Supervisor.ViewModels"
+             x:DataType="viewmodel:GestaoViewModel"
+             x:Class="Valedourado.Supervisor.Views.GestaoPage"
+             Title="Gestão de OPs em Aberto"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="*">
+        <RefreshView Command="{Binding LoadOpenProductionsCommand}" IsRefreshing="{Binding IsBusy}">
+            <CollectionView ItemsSource="{Binding OpenProductions}"
+                            SelectionMode="None"
+                            Margin="10,0">
+                <CollectionView.EmptyView>
+                    <Label Text="Nenhuma Ordem de Produção em aberto." 
+                           HorizontalOptions="Center" VerticalOptions="Center" Margin="20"
+                           Style="{StaticResource Caption}"/>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="dto:ProducaoDto">
+                        <Border Style="{StaticResource Card}" Margin="0,8">
+                            <VerticalStackLayout Spacing="12">
+                                <Label Text="{Binding Produto}" Style="{StaticResource Title2}" LineBreakMode="WordWrap"/>
+                                <Label Style="{StaticResource Caption}">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="OP: " FontAttributes="Bold" />
+                                            <Span Text="{Binding OrdemProducao}" />
+                                            <Span Text="  |  Máquina: " FontAttributes="Bold" />
+                                            <Span Text="{Binding Maquina}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
+                                <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                                    <Button Grid.Column="0" Text="Detalhes" 
+                                            Style="{StaticResource PrimaryButton}" 
+                                            HeightRequest="40" FontSize="14"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:GestaoViewModel}}, Path=GoToDetailsCommand}"
+                                            CommandParameter="{Binding .}"/>
+
+                                    <Button Grid.Column="1" Text="Cancelar OP" 
+                                            Style="{StaticResource DangerButton}" 
+                                            HeightRequest="40" FontSize="14"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:GestaoViewModel}}, Path=CancelProductionCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+        <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" VerticalOptions="Center" HorizontalOptions="Center"/>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36401.2
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Valedourado.Supervisor", "Valedourado.Supervisor\Valedourado.Supervisor.csproj", "{CF54F830-33EF-4459-A76B-09E3F769E999}"
+	ProjectSection(ProjectDependencies) = postProject
+		{63D529A0-C928-4F88-A672-9A4DD903B167} = {63D529A0-C928-4F88-A672-9A4DD903B167}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Valedourado.Shared", "Valedourado.Shared\Valedourado.Shared.csproj", "{63D529A0-C928-4F88-A672-9A4DD903B167}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Valedourado", "Valedourado\Valedourado.csproj", "{F70C6A47-3069-477C-92DC-F20FFCB39E46}"
+	ProjectSection(ProjectDependencies) = postProject
+		{63D529A0-C928-4F88-A672-9A4DD903B167} = {63D529A0-C928-4F88-A672-9A4DD903B167}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paletizacao", "Paletizacao\Paletizacao.csproj", "{334099AA-63EA-4CB4-AB91-4A83DC24AE68}"
+	ProjectSection(ProjectDependencies) = postProject
+		{63D529A0-C928-4F88-A672-9A4DD903B167} = {63D529A0-C928-4F88-A672-9A4DD903B167}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CF54F830-33EF-4459-A76B-09E3F769E999}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF54F830-33EF-4459-A76B-09E3F769E999}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF54F830-33EF-4459-A76B-09E3F769E999}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{CF54F830-33EF-4459-A76B-09E3F769E999}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF54F830-33EF-4459-A76B-09E3F769E999}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF54F830-33EF-4459-A76B-09E3F769E999}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{63D529A0-C928-4F88-A672-9A4DD903B167}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63D529A0-C928-4F88-A672-9A4DD903B167}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63D529A0-C928-4F88-A672-9A4DD903B167}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63D529A0-C928-4F88-A672-9A4DD903B167}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F70C6A47-3069-477C-92DC-F20FFCB39E46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F70C6A47-3069-477C-92DC-F20FFCB39E46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F70C6A47-3069-477C-92DC-F20FFCB39E46}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F70C6A47-3069-477C-92DC-F20FFCB39E46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F70C6A47-3069-477C-92DC-F20FFCB39E46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F70C6A47-3069-477C-92DC-F20FFCB39E46}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{334099AA-63EA-4CB4-AB91-4A83DC24AE68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{334099AA-63EA-4CB4-AB91-4A83DC24AE68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{334099AA-63EA-4CB4-AB91-4A83DC24AE68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{334099AA-63EA-4CB4-AB91-4A83DC24AE68}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EB25E3DF-3E0A-4247-9526-7C6C7FDAF900}
+	EndGlobalSection
+EndGlobal

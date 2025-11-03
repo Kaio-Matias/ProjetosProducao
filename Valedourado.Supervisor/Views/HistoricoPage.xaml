@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:dto="clr-namespace:Valedourado.Shared.Dtos;assembly=Valedourado.Shared"
+             xmlns:viewmodel="clr-namespace:Valedourado.Supervisor.ViewModels"
+             x:DataType="viewmodel:HistoricoViewModel"
+             x:Class="Valedourado.Supervisor.Views.HistoricoPage"
+             Title="Histórico de OPs Fechadas"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto, *">
+
+        <Border Grid.Row="0" Style="{StaticResource FilterContainer}">
+            <Grid ColumnDefinitions="*,*,Auto" ColumnSpacing="10" VerticalOptions="Center">
+
+                <VerticalStackLayout Grid.Column="0" Spacing="4">
+                    <Label Text="Data Inicial" Style="{StaticResource Caption}" FontSize="12"/>
+                    <DatePicker Date="{Binding StartDate}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="1" Spacing="4">
+                    <Label Text="Data Final" Style="{StaticResource Caption}" FontSize="12"/>
+                    <DatePicker Date="{Binding EndDate}" />
+                </VerticalStackLayout>
+
+                <Button Grid.Column="2" 
+                        Text="Buscar" 
+                        Command="{Binding SearchByDateRangeCommand}" 
+                        IsEnabled="{Binding IsNotBusy}"
+                        Style="{StaticResource PrimaryButton}"
+                        HeightRequest="40"
+                        VerticalOptions="End"/>
+            </Grid>
+        </Border>
+
+        <CollectionView Grid.Row="1" 
+                        ItemsSource="{Binding ClosedProductions}"
+                        SelectionMode="None"
+                        Margin="10,0">
+            <CollectionView.EmptyView>
+                <Label Text="Nenhuma Ordem de Produção encontrada." 
+                       HorizontalOptions="Center" VerticalOptions="Center" Margin="20"
+                       Style="{StaticResource Caption}"/>
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="dto:ProducaoDto">
+                    <Border Style="{StaticResource Card}" Margin="0,8">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:HistoricoViewModel}}, Path=GoToDetailsCommand}" 
+                                                  CommandParameter="{Binding .}"/>
+                        </Border.GestureRecognizers>
+
+                        <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="*, Auto" RowSpacing="8" ColumnSpacing="10">
+
+                            <Label Grid.Row="0" Grid.Column="0" 
+                                   Text="{Binding Produto}" 
+                                   Style="{StaticResource Title2}"
+                                   LineBreakMode="TailTruncation"/>
+
+                            <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="4">
+                                <Label Style="{StaticResource Caption}">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="OP: " FontAttributes="Bold" />
+                                            <Span Text="{Binding OrdemProducao}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                <Label Style="{StaticResource Caption}">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="Máquina: " FontAttributes="Bold" />
+                                            <Span Text="{Binding Maquina}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                            </VerticalStackLayout>
+
+                            <HorizontalStackLayout Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" VerticalOptions="Center" Spacing="6">
+                                <Ellipse WidthRequest="10" HeightRequest="10"
+                                         Fill="{Binding Status, Converter={StaticResource StatusToColorConverter}}"/>
+                                <Label Text="{Binding Status}" Style="{StaticResource Caption}" VerticalTextAlignment="Center"/>
+                            </HorizontalStackLayout>
+
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <ActivityIndicator Grid.Row="1" IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" VerticalOptions="Center" HorizontalOptions="Center"/>
+    </Grid>
+</ContentPage>

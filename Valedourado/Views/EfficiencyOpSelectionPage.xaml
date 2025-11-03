@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:Valedourado.ViewModels"
+             xmlns:dtos="clr-namespace:Valedourado.Shared.Dtos;assembly=Valedourado.Shared"
+             x:Class="Valedourado.Views.EfficiencyOpSelectionPage"
+             x:DataType="viewmodel:EfficiencyOpSelectionViewModel"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto, *" RowSpacing="0" BackgroundColor="{StaticResource Primary}">
+        <Grid Grid.Row="0" Padding="15,20" ColumnDefinitions="Auto, *">
+            <Button Grid.Column="0" Text="‹ Voltar" Command="{Binding GoBackCommand}" Style="{StaticResource TransparentButton}"/>
+            <Label Grid.Column="1" Text="Selecionar OP (Eficiência)" Style="{StaticResource Title2}" TextColor="{StaticResource PrimaryText}" HorizontalOptions="Center" VerticalOptions="Center"/>
+        </Grid>
+
+        <Border Grid.Row="1" BackgroundColor="{AppThemeBinding Light={StaticResource PageBackgroundColor}, Dark={StaticResource OffBlack}}" StrokeShape="RoundRectangle 30,30,0,0" Padding="20">
+            <CollectionView ItemsSource="{Binding OpenProducoes}" SelectionMode="None">
+                <CollectionView.Header>
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" Margin="0,10"/>
+                </CollectionView.Header>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="dtos:ProducaoDto">
+                        <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:EfficiencyOpSelectionViewModel}}, Path=SelectOpCommand}"
+                                                      CommandParameter="{Binding .}"/>
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="{Binding Produto}" Style="{StaticResource Body}" FontAttributes="Bold" />
+                                <Label Style="{StaticResource Caption}">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="OP: "/>
+                                            <Span Text="{Binding OrdemProducao}" FontAttributes="Bold"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                <Label Text="{Binding Maquina, StringFormat='Máquina: {0}'}" Style="{StaticResource Caption}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Border>
+    </Grid>
+</ContentPage>
