@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
+// System.Web.HttpUtility não é mais necessário, trocamos por System.Uri
 using Valedourado.Shared.Dtos;
 
 namespace Valedourado.Services
@@ -63,6 +64,53 @@ namespace Valedourado.Services
         {
             var response = await _httpClient.PostAsJsonAsync("/api/Eficiencia", registos);
             if (!response.IsSuccessStatusCode) await HandleApiError(response);
+        }
+
+        // ===== IMPLEMENTAÇÕES CORRIGIDAS =====
+
+        public async Task<List<PerdasDto>> GetPerdasPorOpEOperadorAsync(int ordemProducao, string operador)
+        {
+            // ===== CORREÇÃO AQUI =====
+            // Trocado HttpUtility.UrlEncode por Uri.EscapeDataString
+            // Isso codifica "Alexandre Jackson" para "Alexandre%20Jackson"
+            var operadorCodificado = Uri.EscapeDataString(operador);
+            var url = $"/api/Perdas/op/{ordemProducao}/operador/{operadorCodificado}";
+
+            var response = await _httpClient.GetAsync(url);
+
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                return new List<PerdasDto>();
+            }
+
+            if (!response.IsSuccessStatusCode)
+            {
+                await HandleApiError(response);
+            }
+
+            return await response.Content.ReadFromJsonAsync<List<PerdasDto>>();
+        }
+
+        public async Task<List<EficienciaDto>> GetEficienciaPorOpEOperadorAsync(int ordemProducao, string operador)
+        {
+            // ===== CORREÇÃO AQUI =====
+            // Trocado HttpUtility.UrlEncode por Uri.EscapeDataString
+            var operadorCodificado = Uri.EscapeDataString(operador);
+            var url = $"/api/Eficiencia/op/{ordemProducao}/operador/{operadorCodificado}";
+
+            var response = await _httpClient.GetAsync(url);
+
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                return new List<EficienciaDto>();
+            }
+
+            if (!response.IsSuccessStatusCode)
+            {
+                await HandleApiError(response);
+            }
+
+            return await response.Content.ReadFromJsonAsync<List<EficienciaDto>>();
         }
     }
 }

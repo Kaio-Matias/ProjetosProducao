@@ -3,7 +3,7 @@
 using Valedourado.Services;
 using Valedourado.ViewModels;
 using Valedourado.Views;
-
+using Microsoft.Extensions.Logging;
 namespace Valedourado
 {
     public static class MauiProgram

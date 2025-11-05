@@ -8,6 +8,9 @@ using System.Diagnostics;
 using CommunityToolkit.Maui.Storage;
 using System.Threading;
 using System.Linq;
+using System.Threading.Tasks; // Adicionado para Task
+using System; // Adicionado para Exception
+using System.Collections.Generic; // Adicionado para Dictionary
 
 namespace Valedourado.Supervisor.ViewModels
 {
@@ -16,8 +19,7 @@ namespace Valedourado.Supervisor.ViewModels
     {
         private readonly IApiService _apiService;
         private readonly IFileSaver _fileSaver;
-
-        // --- MELHORIA APLICADA: Controle de cancelamento da tarefa ---
+        
         private CancellationTokenSource _cancellationTokenSource;
 
         [ObservableProperty]
@@ -26,10 +28,20 @@ namespace Valedourado.Supervisor.ViewModels
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsOpAberta))]
         [NotifyCanExecuteChangedFor(nameof(FecharOpCommand))]
+        [NotifyCanExecuteChangedFor(nameof(CancelarOpCommand))] // Notifica o novo comando
         RelatorioOpCompletoDto? relatorio;
 
         [ObservableProperty]
         string paletesTitle;
+        
+        [ObservableProperty]
+        private int _totalProduzidoDetalhamento;
+
+        [ObservableProperty]
+        private int _totalPerdidoDetalhamento;
+        
+        [ObservableProperty]
+        private int _totalPerdas;
 
         public bool IsOpAberta => Relatorio?.InfoGeral?.Status == "Aberto";
 
@@ -44,7 +56,7 @@ namespace Valedourado.Supervisor.ViewModels
             Relatorio = null;
             _ = LoadOpDetailsAsync();
         }
-
+        
         partial void OnRelatorioChanged(RelatorioOpCompletoDto? value)
         {
             if (value?.Paletes != null && value.Paletes.Any())
@@ -56,13 +68,32 @@ namespace Valedourado.Supervisor.ViewModels
             {
                 PaletesTitle = "Paletes Gerados";
             }
+            
+            if (value?.Detalhamentos != null && value.Detalhamentos.Any())
+            {
+                TotalProduzidoDetalhamento = value.Detalhamentos.Sum(d => d.EmbProduzidas);
+                TotalPerdidoDetalhamento = value.Detalhamentos.Sum(d => d.EmbPerdidas);
+            }
+            else
+            {
+                TotalProduzidoDetalhamento = 0;
+                TotalPerdidoDetalhamento = 0;
+            }
+            
+            if (value?.Perdas != null && value.Perdas.Any())
+            {
+                TotalPerdas = value.Perdas.Sum(p => p.Quantidade);
+            }
+            else
+            {
+                TotalPerdas = 0;
+            }
         }
-
-        // --- MELHORIA APLICADA: Comando refatorado com CancellationToken e ExecuteAsync ---
+        
         [RelayCommand]
         private async Task LoadOpDetailsAsync()
         {
-            _cancellationTokenSource?.Cancel(); // Cancela a requisição anterior
+            _cancellationTokenSource?.Cancel(); 
             _cancellationTokenSource = new CancellationTokenSource();
 
             await ExecuteAsync(async () =>
@@ -74,7 +105,7 @@ namespace Valedourado.Supervisor.ViewModels
         [RelayCommand(CanExecute = nameof(IsOpAberta))]
         private async Task FecharOpAsync()
         {
-            bool userConfirmed = await Shell.Current.DisplayAlert("Confirmar Ação", $"Você tem certeza que deseja fechar a Ordem de Produção Nº {OrdemProducao}?", "Sim, Fechar", "Cancelar");
+            bool userConfirmed = await Shell.Current.DisplayAlert("Confirmar Ação", $"Você tem certeza que deseja FECHAR a Ordem de Produção Nº {OrdemProducao}?", "Sim, Fechar", "Cancelar");
             if (!userConfirmed) return;
 
             await ExecuteAsync(async () =>
@@ -91,13 +122,39 @@ namespace Valedourado.Supervisor.ViewModels
                 }
             }, "Ocorreu um erro ao fechar a OP.");
         }
+        
+        [RelayCommand(CanExecute = nameof(IsOpAberta))] 
+        private async Task CancelarOpAsync()
+        {
+            bool userConfirmed = await Shell.Current.DisplayAlert("Confirmar Cancelamento", $"Você tem certeza que deseja CANCELAR a Ordem de Produção Nº {OrdemProducao}? Esta ação não pode ser desfeita.", "Sim, Cancelar", "Não");
+            if (!userConfirmed) return;
 
+            await ExecuteAsync(async () =>
+            {
+                var sucesso = await _apiService.CancelarProducaoAsync(OrdemProducao);
+                if (sucesso)
+                {
+                    await Shell.Current.DisplayAlert("Sucesso", "Ordem de Produção cancelada com sucesso!", "OK");
+                    await Shell.Current.GoToAsync(".."); 
+                }
+                else
+                {
+                    await Shell.Current.DisplayAlert("Falha", "Não foi possível cancelar a OP. Ela pode já estar fechada ou não foi encontrada.", "OK");
+                }
+            }, "Ocorreu um erro ao cancelar a OP.");
+        }
+        
         [RelayCommand]
         private async Task SharePdfAsync()
         {
+            // Criar um CancellationTokenSource local para esta operação
+            var pdfCts = new CancellationTokenSource();
+
             await ExecuteAsync(async () =>
             {
-                var pdfBytes = await _apiService.GetRelatorioPdfAsync(OrdemProducao);
+                // ===== CORRIGIDO (para CS7036): Passando o CancellationToken =====
+                var pdfBytes = await _apiService.GetRelatorioPdfAsync(OrdemProducao, pdfCts.Token);
+                
                 if (pdfBytes == null || pdfBytes.Length == 0)
                 {
                     await Shell.Current.DisplayAlert("Erro", "O relatório PDF está vazio ou não pôde ser gerado.", "OK");
@@ -107,7 +164,7 @@ namespace Valedourado.Supervisor.ViewModels
 #if WINDOWS
                 using var stream = new MemoryStream(pdfBytes);
                 var fileName = $"Relatorio_OP_{OrdemProducao}.pdf";
-                var fileSaverResult = await _fileSaver.SaveAsync(fileName, stream, CancellationToken.None);
+                var fileSaverResult = await _fileSaver.SaveAsync(fileName, stream, CancellationToken.None); 
 
                 if (fileSaverResult.IsSuccessful)
                 {
@@ -132,8 +189,7 @@ namespace Valedourado.Supervisor.ViewModels
 #endif
             }, "Ocorreu um erro inesperado ao tentar compartilhar o PDF.");
         }
-
-        // --- MELHORIA APLICADA: Método para limpar recursos e cancelar tarefas ---
+        
         public void Cleanup()
         {
             _cancellationTokenSource?.Cancel();

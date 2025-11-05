@@ -12,5 +12,9 @@ namespace Valedourado.Services
         Task CreateDetalhamentoAsync(CreateDetalhamentoOpDto detalhe);
         Task CreatePerdasAsync(List<PerdasDto> perdas);
         Task CreateEficienciaAsync(List<EficienciaDto> registos);
+
+        // ===== MÉTODOS ADICIONADOS =====
+        Task<List<PerdasDto>> GetPerdasPorOpEOperadorAsync(int ordemProducao, string operador);
+        Task<List<EficienciaDto>> GetEficienciaPorOpEOperadorAsync(int ordemProducao, string operador);
     }
 }

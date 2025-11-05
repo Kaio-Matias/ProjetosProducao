@@ -20,11 +20,17 @@ namespace Valedourado.ViewModels
         public ObservableCollection<SelectableMotivoItem> AllMotivos { get; } = new();
         public ObservableCollection<MotivoTempo> SelectedMotivos { get; } = new();
 
+        // ===== NOVA PROPRIEDADE ADICIONADA (CORRIGE ERRO CS0103) =====
+        [ObservableProperty]
+        private ObservableCollection<EficienciaDto> _registrosExistentes = new();
+
         public RecordEfficiencyViewModel(IApiService apiService, IAuthService authService)
         {
             _apiService = apiService;
             _authService = authService;
-            Operador = _authService.CurrentUser?.Nome;
+            // Garante que 'Operador' nunca seja nulo
+            Operador = _authService.CurrentUser?.Nome ?? "Operador";
+
             // Populando a lista de motivos de exemplo
             var motivosList = new List<string>
             {"ABAS ABERTAS",
@@ -96,6 +102,55 @@ namespace Valedourado.ViewModels
             }
         }
 
+        // ===== MÉTODO OnAppearing (AGORA CORRETO DEVIDO À MUDANÇA NO BASEVIEWMODEL) =====
+        // (CORRIGE ERROS CS0117 e CS0115)
+        public override async void OnAppearing()
+        {
+            base.OnAppearing();
+            await LoadDataAsync();
+        }
+
+        // ===== NOVO MÉTODO: PARA CARREGAR OS DADOS DA API =====
+        [RelayCommand]
+        private async Task LoadDataAsync()
+        {
+            if (IsBusy) return;
+
+            if (OrdemProducao == 0 || string.IsNullOrEmpty(Operador))
+            {
+                return;
+            }
+
+            IsBusy = true;
+            try
+            {
+                // RegistrosExistentes (com 'R' maiúsculo) é a propriedade pública gerada
+                // (CORRIGE ERRO CS0103)
+                RegistrosExistentes.Clear();
+
+                // Chama o novo método da ApiService (CORRIGE ERRO CS1061)
+                var registros = await _apiService.GetEficienciaPorOpEOperadorAsync(OrdemProducao, Operador);
+
+                if (registros != null)
+                {
+                    foreach (var registro in registros)
+                    {
+                        // (CORRIGE ERRO CS0103)
+                        RegistrosExistentes.Add(registro);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // A ApiService já trata o 404 e retorna lista vazia
+                await Shell.Current.DisplayAlert("Erro", $"Não foi possível carregar lançamentos anteriores: {ex.Message}", "OK");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
         [RelayCommand]
         private void ToggleMotivoSelection(SelectableMotivoItem motivoItem)
         {
@@ -118,6 +173,7 @@ namespace Valedourado.ViewModels
 
         private void UpdateTotal() => TotalTempo = new TimeSpan(SelectedMotivos.Sum(m => m.Tempo.Ticks));
 
+        // ===== MÉTODO SAVE ATUALIZADO =====
         [RelayCommand]
         private async Task Save()
         {
@@ -141,12 +197,29 @@ namespace Valedourado.ViewModels
 
                 await _apiService.CreateEficienciaAsync(eficienciaParaEnviar);
                 await Shell.Current.DisplayAlert("Sucesso", "Registros de eficiência salvos!", "OK");
-                await Shell.Current.GoToAsync($"//{nameof(HomePage)}");
+
+                // Limpa entradas e recarrega a lista
+                ClearInputs();
+                await LoadDataAsync();
+
+                // Navegação removida
+                // await Shell.Current.GoToAsync($"//{nameof(HomePage)}");
             }
             catch (Exception ex)
             {
                 await Shell.Current.DisplayAlert("Erro", $"Não foi possível salvar: {ex.Message}", "OK");
             }
+        }
+
+        // ===== NOVO MÉTODO AUXILIAR PARA LIMPAR ENTRADAS =====
+        private void ClearInputs()
+        {
+            SelectedMotivos.Clear();
+            foreach (var motivo in AllMotivos.Where(m => m.IsSelected))
+            {
+                motivo.IsSelected = false;
+            }
+            UpdateTotal();
         }
     }
 }

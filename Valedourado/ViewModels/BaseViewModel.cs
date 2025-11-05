@@ -16,5 +16,16 @@ namespace Valedourado.ViewModels
         {
             await Shell.Current.GoToAsync("..");
         }
+
+        // ===== MÉTODO ADICIONADO PARA CORRIGIR ERROS DE OVERRIDE =====
+        /// <summary>
+        /// Método virtual que pode ser substituído por ViewModels filhas
+        /// para executar ações quando a página associada aparece.
+        /// </summary>
+        public virtual void OnAppearing()
+        {
+            // A implementação base não faz nada,
+            // mas permite que as filhas a substituam (override).
+        }
     }
 }

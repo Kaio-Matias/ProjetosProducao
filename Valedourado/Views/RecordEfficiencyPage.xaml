@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodel="clr-namespace:Valedourado.ViewModels"
              xmlns:converters="clr-namespace:Valedourado.Converters"
+             xmlns:dto="clr-namespace:Valedourado.Shared.Dtos;assembly=Valedourado.Shared"
              x:Class="Valedourado.Views.RecordEfficiencyPage"
              x:DataType="viewmodel:RecordEfficiencyViewModel"
              Shell.NavBarIsVisible="False">
@@ -23,6 +24,27 @@
                         <Label Text="{Binding OrdemProducao, StringFormat='OP: {0}'}" HorizontalOptions="Center" Style="{StaticResource Caption}"/>
                         <Label Text="{Binding Operador, StringFormat='Operador: {0}'}" HorizontalOptions="Center" Style="{StaticResource Caption}" Margin="0,0,0,10"/>
 
+                        <Border Style="{StaticResource Card}" 
+                                IsVisible="{Binding RegistrosExistentes.Count, Converter={StaticResource CountToBoolConverter}}">
+                            <VerticalStackLayout Spacing="10">
+                                <Label Text="Meus Lançamentos (Eficiência)" Style="{StaticResource Title2}"/>
+                                <CollectionView ItemsSource="{Binding RegistrosExistentes}">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate x:DataType="dto:EficienciaDto">
+                                            <Grid ColumnDefinitions="*, Auto" Padding="0,5">
+                                                <Label Grid.Column="0" 
+                                                       Text="{Binding Motivo}" 
+                                                       VerticalOptions="Center"/>
+                                                <Label Grid.Column="1" 
+                                                       Text="{Binding Tempo, StringFormat='{0:HH\\:mm}'}" 
+                                                       FontAttributes="Bold" 
+                                                       VerticalOptions="Center"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </VerticalStackLayout>
+                        </Border>
                         <Border Style="{StaticResource Card}" IsVisible="{Binding SelectedMotivos.Count, Converter={StaticResource CountToBoolConverter}}">
                             <VerticalStackLayout Spacing="10">
                                 <Label Text="Tempo Gasto (Horas:Minutos)" Style="{StaticResource Title2}"/>

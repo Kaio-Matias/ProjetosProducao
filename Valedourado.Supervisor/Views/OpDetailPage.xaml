@@ -9,6 +9,14 @@
              Title="{Binding OrdemProducao, StringFormat='Detalhes da OP {0}'}"
              Shell.NavBarIsVisible="False">
 
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:IsNotNullConverter x:Key="IsNotNullConverter" />
+            <converters:ListHasItemsConverter x:Key="ListHasItemsConverter" />
+            <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <ScrollView>
         <VerticalStackLayout Padding="10" Spacing="10">
 
@@ -35,6 +43,54 @@
                     </Grid>
                 </Border>
 
+
+                <Border Style="{StaticResource Card}" IsVisible="{Binding Relatorio.Detalhamentos, Converter={StaticResource ListHasItemsConverter}}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Detalhamento da Produção" Style="{StaticResource Title2}"/>
+
+                        <Grid ColumnDefinitions="*, Auto, Auto, Auto" Padding="0,5">
+                            <Label Grid.Column="0" Text="Operador" FontAttributes="Bold"/>
+                            <Label Grid.Column="1" Text="Turno" FontAttributes="Bold" HorizontalOptions="Center"/>
+                            <Label Grid.Column="2" Text="Produzido" FontAttributes="Bold" HorizontalOptions="End" Margin="10,0,0,0"/>
+                            <Label Grid.Column="3" Text="Perdido" FontAttributes="Bold" HorizontalOptions="End" Margin="10,0,0,0"/>
+                        </Grid>
+
+                        <CollectionView ItemsSource="{Binding Relatorio.Detalhamentos}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="dto:DetalhamentoOpDto">
+                                    <Grid ColumnDefinitions="*, Auto, Auto, Auto" Padding="0,5">
+                                        <Label Grid.Column="0" Text="{Binding Operador}" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                                        <Label Grid.Column="1" Text="{Binding Turno}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                        <Label Grid.Column="2" Text="{Binding EmbProduzidas}" FontAttributes="Bold" HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,0,0" TextColor="{StaticResource Primary}"/>
+                                        <Label Grid.Column="3" Text="{Binding EmbPerdidas}" FontAttributes="Bold" HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,0,0" TextColor="{StaticResource Danger}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                        <BoxView Style="{StaticResource HorizontalRule}" Margin="0,5"/>
+
+                        <Grid ColumnDefinitions="*, Auto, Auto, Auto" Padding="0,5">
+                            <Label Grid.Column="0" Text="TOTAIS" FontAttributes="Bold" VerticalOptions="Center"/>
+                            <Label Grid.Column="2" 
+                                   Text="{Binding TotalProduzidoDetalhamento}" 
+                                   FontAttributes="Bold" 
+                                   HorizontalOptions="End" 
+                                   VerticalOptions="Center" 
+                                   Margin="10,0,0,0"
+                                   TextColor="{StaticResource Primary}"/>
+                            <Label Grid.Column="3" 
+                                   Text="{Binding TotalPerdidoDetalhamento}" 
+                                   FontAttributes="Bold" 
+                                   HorizontalOptions="End" 
+                                   VerticalOptions="Center" 
+                                   Margin="10,0,0,0"
+                                   TextColor="{StaticResource Danger}"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+
                 <Border Style="{StaticResource Card}" IsVisible="{Binding Relatorio.Perdas, Converter={StaticResource ListHasItemsConverter}}">
                     <VerticalStackLayout Spacing="10">
                         <Label Text="Registros de Perdas" Style="{StaticResource Title2}"/>
@@ -49,6 +105,18 @@
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                         </CollectionView>
+
+                        <BoxView Style="{StaticResource HorizontalRule}" Margin="0,5"/>
+
+                        <Grid ColumnDefinitions="*, Auto, Auto" Padding="0,5">
+                            <Label Grid.Column="0" Text="TOTAL DE PERDAS" FontAttributes="Bold" VerticalOptions="Center"/>
+                            <Label Grid.Column="1" 
+                                   Text="{Binding TotalPerdas}" 
+                                   FontAttributes="Bold" 
+                                   VerticalOptions="Center" 
+                                   Margin="10,0"
+                                   TextColor="{StaticResource Danger}"/>
+                        </Grid>
                     </VerticalStackLayout>
                 </Border>
 
@@ -78,9 +146,7 @@
                                 <DataTemplate x:DataType="dto:PaleteDto">
                                     <Grid ColumnDefinitions="Auto, *, Auto" Padding="0,5">
                                         <Label Grid.Column="0" Text="{Binding N_Palete, StringFormat='Palete {0:00}'}" FontAttributes="Bold" VerticalOptions="Center"/>
-
                                         <Label Grid.Column="1" Text="{Binding QtdePorPalete, StringFormat='{0} unidades'}" HorizontalOptions="Center" VerticalOptions="Center"/>
-
                                         <Label Grid.Column="2" Text="{Binding Usuario}" Style="{StaticResource Caption}" VerticalOptions="Center"/>
                                     </Grid>
                                 </DataTemplate>
@@ -90,14 +156,18 @@
                 </Border>
 
                 <VerticalStackLayout Margin="0,10,0,0" Spacing="10">
+
                     <Button Text="Fechar Ordem de Produção" 
                             Command="{Binding FecharOpCommand}" 
                             IsVisible="{Binding IsOpAberta}" 
+                            Style="{StaticResource PrimaryButton}"/>
+                    <Button Text="Cancelar Ordem de Produção" 
+                            Command="{Binding CancelarOpCommand}"
+                            IsVisible="{Binding IsOpAberta}"
                             Style="{StaticResource DangerButton}"/>
-
                     <Button Text="Compartilhar Relatório PDF" 
                             Command="{Binding SharePdfCommand}" 
-                            Style="{StaticResource PrimaryButton}"/>
+                            Style="{StaticResource SecondaryButton}"/>
                 </VerticalStackLayout>
             </VerticalStackLayout>
         </VerticalStackLayout>

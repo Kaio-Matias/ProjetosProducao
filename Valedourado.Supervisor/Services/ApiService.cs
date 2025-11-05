@@ -1,88 +1,122 @@
-﻿using System.Net;
+﻿using Valedourado.Shared.Dtos;
 using System.Net.Http.Json;
-using Valedourado.Shared.Dtos;
-using Valedourado.Supervisor.Configuration; // --- MELHORIA APLICADA ---
+using System.Net.Http;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Threading;
+using System.Net;
+using System; // Adicionado para DateTime
 
 namespace Valedourado.Supervisor.Services
 {
+    // A classe agora implementa a IApiService corrigida
     public class ApiService : IApiService
     {
         private readonly HttpClient _httpClient;
-        public ApiService(HttpClient httpClient) => _httpClient = httpClient;
+        private readonly IAuthService _authService;
 
-        // O método HandleApiError original é mantido sem alterações
-        private async Task HandleApiError(HttpResponseMessage response, string defaultMessage = "Ocorreu um erro na API.")
+        public ApiService(HttpClient httpClient, IAuthService authService)
         {
-            if (response.IsSuccessStatusCode)
-            {
-                return; // Se a resposta foi bem-sucedida, não faz nada.
-            }
-
-            var errorContent = await response.Content.ReadAsStringAsync();
-            string errorMessage = string.IsNullOrWhiteSpace(errorContent) ? defaultMessage : errorContent;
-
-            switch (response.StatusCode)
-            {
-                case HttpStatusCode.Conflict: // 409
-                    throw new HttpRequestException("Já existe um recurso com este identificador (Ex: Matrícula duplicada).", null, response.StatusCode);
-                case HttpStatusCode.NotFound: // 404
-                    throw new HttpRequestException("O recurso solicitado não foi encontrado.", null, response.StatusCode);
-                case HttpStatusCode.Unauthorized: // 401
-                case HttpStatusCode.Forbidden: // 403
-                    throw new HttpRequestException("Acesso negado. Verifique suas permissões.", null, response.StatusCode);
-                case HttpStatusCode.BadRequest: // 400
-                    throw new HttpRequestException($"Dados inválidos: {errorMessage}", null, response.StatusCode);
-                default:
-                    throw new HttpRequestException(errorMessage, null, response.StatusCode);
-            }
+            _httpClient = httpClient;
+            _authService = authService;
         }
 
+        private async Task HandleApiError(HttpResponseMessage response)
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            throw new HttpRequestException($"Erro na API: {response.StatusCode}. Detalhes: {errorContent}");
+        }
+
+        // ===== IMPLEMENTAÇÃO CORRIGIDA (baseado no erro) =====
         public async Task<UsuarioDto> LoginAsync(int matricula)
         {
-            // --- MELHORIA APLICADA: Uso de constantes ---
-            var response = await _httpClient.PostAsJsonAsync(AppConstants.ApiEndpoints.Login, new LoginRequestDto { Matricula = matricula });
-            await HandleApiError(response, "Matrícula não encontrada ou erro no login.");
+            // O DTO agora é criado aqui dentro
+            var loginRequest = new LoginRequestDto { Matricula = matricula }; 
+            var response = await _httpClient.PostAsJsonAsync("/api/Usuario/login", loginRequest);
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                    throw new HttpRequestException("Matrícula não encontrada.");
+                await HandleApiError(response);
+            }
             return await response.Content.ReadFromJsonAsync<UsuarioDto>();
         }
 
-        public async Task<UsuarioDto> RegisterAsync(CreateUsuarioDto novoUsuario)
+        public async Task<UsuarioDto> RegisterAsync(CreateUsuarioDto registerRequest)
         {
-            var response = await _httpClient.PostAsJsonAsync(AppConstants.ApiEndpoints.Register, novoUsuario);
-            await HandleApiError(response);
+            var response = await _httpClient.PostAsJsonAsync("/api/Usuario/register", registerRequest);
+            if (!response.IsSuccessStatusCode)
+            {
+                if (response.StatusCode == HttpStatusCode.Conflict)
+                    throw new HttpRequestException("Já existe um usuário com esta matrícula.");
+                await HandleApiError(response);
+            }
             return await response.Content.ReadFromJsonAsync<UsuarioDto>();
         }
 
-        // --- MELHORIA APLICADA: Uso de constantes e CancellationToken ---
-        public async Task<DashboardDto> GetDashboardDataAsync(CancellationToken token = default) =>
-            await _httpClient.GetFromJsonAsync<DashboardDto>(AppConstants.ApiEndpoints.Dashboard, token);
-
-        public async Task<List<ProducaoDto>> GetOpenProducoesAsync(CancellationToken token = default) =>
-            await _httpClient.GetFromJsonAsync<List<ProducaoDto>>(AppConstants.ApiEndpoints.ProducoesAbertas, token);
-
-        public async Task<List<ProducaoDto>> GetClosedProducoesByDateRangeAsync(DateTime startDate, DateTime endDate, CancellationToken token = default)
+        public async Task<DashboardDto> GetDashboardDataAsync(CancellationToken cancellationToken)
         {
-            string startDateString = startDate.ToString("yyyy-MM-dd");
-            string endDateString = endDate.ToString("yyyy-MM-dd");
-            var url = string.Format(AppConstants.ApiEndpoints.ProducoesFechadasPorData, startDateString, endDateString);
-            return await _httpClient.GetFromJsonAsync<List<ProducaoDto>>(url, token);
+            return await _httpClient.GetFromJsonAsync<DashboardDto>("/api/Relatorio/dashboard", cancellationToken);
         }
 
-        public async Task<RelatorioOpCompletoDto> GetRelatorioCompletoOpAsync(int ordemProducao, CancellationToken token = default) =>
-            await _httpClient.GetFromJsonAsync<RelatorioOpCompletoDto>(string.Format(AppConstants.ApiEndpoints.RelatorioCompletoOp, ordemProducao), token);
+        public async Task<List<ProducaoDto>> GetOpenProducoesAsync(CancellationToken cancellationToken)
+        {
+            return await _httpClient.GetFromJsonAsync<List<ProducaoDto>>("/api/Producoes/abertas", cancellationToken);
+        }
+
+        // ===== IMPLEMENTAÇÃO CORRIGIDA (baseado no erro) =====
+        // (Este método substitui o antigo GetHistoricoProducoesAsync)
+        public async Task<List<ProducaoDto>> GetClosedProducoesByDateRangeAsync(DateTime startDate, DateTime endDate, CancellationToken cancellationToken)
+        {
+            // Usa o endpoint da API que você já tinha
+            var url = $"/api/Producoes/closed/bydate?startDate={startDate:yyyy-MM-dd}&endDate={endDate:yyyy-MM-dd}";
+            return await _httpClient.GetFromJsonAsync<List<ProducaoDto>>(url, cancellationToken);
+        }
+
+        public async Task<RelatorioOpCompletoDto> GetRelatorioCompletoOpAsync(int ordemProducao, CancellationToken cancellationToken)
+        {
+            return await _httpClient.GetFromJsonAsync<RelatorioOpCompletoDto>($"/api/Relatorio/completo/{ordemProducao}", cancellationToken);
+        }
+
+        // ===== IMPLEMENTAÇÃO CORRIGIDA (baseado no erro) =====
+        public async Task<byte[]> GetRelatorioPdfAsync(int ordemProducao, CancellationToken cancellationToken)
+        {
+            // Passa o CancellationToken para a chamada GetAsync
+            var response = await _httpClient.GetAsync($"/api/Relatorio/pdf/{ordemProducao}", cancellationToken);
+            if (!response.IsSuccessStatusCode)
+            {
+                await HandleApiError(response);
+            }
+            return await response.Content.ReadAsByteArrayAsync();
+        }
 
         public async Task<bool> FecharProducaoAsync(int ordemProducao)
         {
-            var response = await _httpClient.PutAsync(string.Format(AppConstants.ApiEndpoints.FecharProducao, ordemProducao), null);
+            var response = await _httpClient.PutAsync($"/api/Producoes/{ordemProducao}/fechar", null);
+            
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                Debug.WriteLine($"Falha ao fechar OP {ordemProducao}. Status: {response.StatusCode}. Erro: {errorContent}");
+            }
+            
             return response.IsSuccessStatusCode;
         }
 
+        // ===== NOVO MÉTODO ADICIONADO =====
         public async Task<bool> CancelarProducaoAsync(int ordemProducao)
         {
-            var response = await _httpClient.PutAsync(string.Format(AppConstants.ApiEndpoints.CancelarProducao, ordemProducao), null);
+            var response = await _httpClient.PutAsync($"/api/Producoes/{ordemProducao}/cancelar", null);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                Debug.WriteLine($"Falha ao CANCELAR OP {ordemProducao}. Status: {response.StatusCode}. Erro: {errorContent}");
+            }
+
             return response.IsSuccessStatusCode;
         }
-
-        public async Task<byte[]> GetRelatorioPdfAsync(int ordemProducao, CancellationToken token = default) =>
-            await _httpClient.GetByteArrayAsync(string.Format(AppConstants.ApiEndpoints.RelatorioPdf, ordemProducao), token);
     }
 }
