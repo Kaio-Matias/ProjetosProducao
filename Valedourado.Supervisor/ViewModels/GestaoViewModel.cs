@@ -4,6 +4,9 @@ using System.Collections.ObjectModel;
 using Valedourado.Shared.Dtos;
 using Valedourado.Supervisor.Services;
 using Valedourado.Supervisor.Views;
+using System.Threading; // <-- ADICIONADO
+using System.Collections.Generic; // <-- ADICIONADO (para List)
+using System.Diagnostics; // <-- ADICIONADO (para Debug)
 
 namespace Valedourado.Supervisor.ViewModels
 {
@@ -21,17 +24,31 @@ namespace Valedourado.Supervisor.ViewModels
             set => SetProperty(ref _openProductions, value);
         }
 
+        // ===== ADICIONADO =====
+        private CancellationTokenSource _cancellationTokenSource;
+
         public GestaoViewModel(IApiService apiService)
         {
             _apiService = apiService;
+            _cancellationTokenSource = new CancellationTokenSource();
         }
 
         [RelayCommand]
         private async Task LoadOpenProductionsAsync()
         {
+            // ===== ADICIONADO (Boa prática para recarregar) =====
+            try
+            {
+                _cancellationTokenSource?.Cancel();
+                _cancellationTokenSource = new CancellationTokenSource();
+            }
+            catch (ObjectDisposedException) { }
+
+
             await ExecuteAsync(async () =>
             {
-                var results = await _apiService.GetOpenProducoesAsync();
+                // ===== CORRIGIDO (passando o token) =====
+                var results = await _apiService.GetOpenProducoesAsync(_cancellationTokenSource.Token);
                 // Agora o compilador reconhece a propriedade OpenProductions
                 OpenProductions = new ObservableCollection<ProducaoDto>(results ?? new List<ProducaoDto>());
             }, "Não foi possível carregar as OPs abertas.");
@@ -41,7 +58,12 @@ namespace Valedourado.Supervisor.ViewModels
         private async Task GoToDetailsAsync(ProducaoDto op)
         {
             if (op == null) return;
-            await Shell.Current.GoToAsync($"{nameof(OpDetailPage)}?OrdemProducao={op.OrdemProducao}");
+            // Corrigindo a passagem de parâmetro para usar o DTO ou ID
+            // O seu OpDetailViewModel espera "OrdemProducao"
+            await Shell.Current.GoToAsync($"{nameof(OpDetailPage)}", new Dictionary<string, object>
+            {
+                { "OrdemProducao", op.OrdemProducao }
+            });
         }
 
         [RelayCommand]
@@ -70,6 +92,16 @@ namespace Valedourado.Supervisor.ViewModels
                     await Shell.Current.DisplayAlert("Falha", "Não foi possível cancelar a OP.", "OK");
                 }
             });
+        }
+
+        // Boa prática: Adicionar um método para cancelar tasks ao sair da página
+        public void Cleanup()
+        {
+            try
+            {
+                _cancellationTokenSource?.Cancel();
+            }
+            catch (ObjectDisposedException) { }
         }
     }
 }

@@ -33,7 +33,7 @@ namespace Valedourado.Supervisor.Services
         public async Task<UsuarioDto> LoginAsync(int matricula)
         {
             // O DTO agora é criado aqui dentro
-            var loginRequest = new LoginRequestDto { Matricula = matricula }; 
+            var loginRequest = new LoginRequestDto { Matricula = matricula };
             var response = await _httpClient.PostAsJsonAsync("/api/Usuario/login", loginRequest);
             if (!response.IsSuccessStatusCode)
             {
@@ -77,14 +77,19 @@ namespace Valedourado.Supervisor.Services
 
         public async Task<RelatorioOpCompletoDto> GetRelatorioCompletoOpAsync(int ordemProducao, CancellationToken cancellationToken)
         {
-            return await _httpClient.GetFromJsonAsync<RelatorioOpCompletoDto>($"/api/Relatorio/completo/{ordemProducao}", cancellationToken);
+            // ============ CORREÇÃO DA ROTA ============
+            // Alterado de "/api/Relatorio/completo/{ordemProducao}"
+            // para corresponder ao [HttpGet("op/{ordemProducao}")] do seu Controller
+            return await _httpClient.GetFromJsonAsync<RelatorioOpCompletoDto>($"/api/Relatorio/op/{ordemProducao}", cancellationToken);
         }
 
         // ===== IMPLEMENTAÇÃO CORRIGIDA (baseado no erro) =====
         public async Task<byte[]> GetRelatorioPdfAsync(int ordemProducao, CancellationToken cancellationToken)
         {
-            // Passa o CancellationToken para a chamada GetAsync
-            var response = await _httpClient.GetAsync($"/api/Relatorio/pdf/{ordemProducao}", cancellationToken);
+            // ============ CORREÇÃO DA ROTA ============
+            // Alterado de "/api/Relatorio/pdf/{ordemProducao}"
+            // para corresponder ao [HttpGet("op/{ordemProducao}/pdf")] do seu Controller
+            var response = await _httpClient.GetAsync($"/api/Relatorio/op/{ordemProducao}/pdf", cancellationToken);
             if (!response.IsSuccessStatusCode)
             {
                 await HandleApiError(response);
@@ -95,13 +100,13 @@ namespace Valedourado.Supervisor.Services
         public async Task<bool> FecharProducaoAsync(int ordemProducao)
         {
             var response = await _httpClient.PutAsync($"/api/Producoes/{ordemProducao}/fechar", null);
-            
+
             if (!response.IsSuccessStatusCode)
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
                 Debug.WriteLine($"Falha ao fechar OP {ordemProducao}. Status: {response.StatusCode}. Erro: {errorContent}");
             }
-            
+
             return response.IsSuccessStatusCode;
         }
 

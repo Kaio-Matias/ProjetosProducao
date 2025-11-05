@@ -4,6 +4,9 @@ using System.Collections.ObjectModel;
 using Valedourado.Shared.Dtos;
 using Valedourado.Supervisor.Services;
 using Valedourado.Supervisor.Views;
+using System.Threading; // <-- ADICIONADO
+using System.Collections.Generic; // <-- ADICIONADO (para List)
+using System.Diagnostics; // <-- ADICIONADO (para Debug)
 
 namespace Valedourado.Supervisor.ViewModels
 {
@@ -22,14 +25,31 @@ namespace Valedourado.Supervisor.ViewModels
             set => SetProperty(ref _closedProductions, value);
         }
 
-        public HistoricoViewModel(IApiService apiService) => _apiService = apiService;
+        // ===== ADICIONADO =====
+        private CancellationTokenSource _cancellationTokenSource;
+
+        public HistoricoViewModel(IApiService apiService)
+        {
+            _apiService = apiService;
+            _cancellationTokenSource = new CancellationTokenSource();
+        }
 
         [RelayCommand]
         private async Task SearchByDateRangeAsync()
         {
+            // ===== ADICIONADO (Boa prática para recarregar) =====
+            try
+            {
+                _cancellationTokenSource?.Cancel();
+                _cancellationTokenSource = new CancellationTokenSource();
+            }
+            catch (ObjectDisposedException) { }
+
+
             await ExecuteAsync(async () =>
             {
-                var results = await _apiService.GetClosedProducoesByDateRangeAsync(StartDate, EndDate);
+                // ===== CORRIGIDO (passando o token) =====
+                var results = await _apiService.GetClosedProducoesByDateRangeAsync(StartDate, EndDate, _cancellationTokenSource.Token);
                 // O compilador agora reconhece a propriedade ClosedProductions
                 ClosedProductions = new ObservableCollection<ProducaoDto>(results ?? new List<ProducaoDto>());
 
@@ -44,7 +64,22 @@ namespace Valedourado.Supervisor.ViewModels
         private async Task GoToDetailsAsync(ProducaoDto op)
         {
             if (op == null) return;
-            await Shell.Current.GoToAsync($"{nameof(OpDetailPage)}?OrdemProducao={op.OrdemProducao}");
+            // Corrigindo a passagem de parâmetro para usar o DTO ou ID
+            // O seu OpDetailViewModel espera "OrdemProducao"
+            await Shell.Current.GoToAsync($"{nameof(OpDetailPage)}", new Dictionary<string, object>
+            {
+                { "OrdemProducao", op.OrdemProducao }
+            });
+        }
+
+        // Boa prática: Adicionar um método para cancelar tasks ao sair da página
+        public void Cleanup()
+        {
+            try
+            {
+                _cancellationTokenSource?.Cancel();
+            }
+            catch (ObjectDisposedException) { }
         }
     }
 }

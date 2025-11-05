@@ -160,14 +160,11 @@
                     <Button Text="Fechar Ordem de Produção" 
                             Command="{Binding FecharOpCommand}" 
                             IsVisible="{Binding IsOpAberta}" 
-                            Style="{StaticResource PrimaryButton}"/>
-                    <Button Text="Cancelar Ordem de Produção" 
-                            Command="{Binding CancelarOpCommand}"
-                            IsVisible="{Binding IsOpAberta}"
-                            Style="{StaticResource DangerButton}"/>
+                             Style="{StaticResource DangerButton}"/>
+                   
                     <Button Text="Compartilhar Relatório PDF" 
                             Command="{Binding SharePdfCommand}" 
-                            Style="{StaticResource SecondaryButton}"/>
+                          Style="{StaticResource PrimaryButton}"/>
                 </VerticalStackLayout>
             </VerticalStackLayout>
         </VerticalStackLayout>
