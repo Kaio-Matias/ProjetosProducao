@@ -123,5 +123,15 @@ namespace Valedourado.Supervisor.Services
 
             return response.IsSuccessStatusCode;
         }
+        public async Task<List<CadastroDto>> GetCadastrosAsync()
+        {
+            return await _httpClient.GetFromJsonAsync<List<CadastroDto>>("/api/Cadastro");
+        }
+        public async Task<ProducaoDto> CreateProducaoAsync(CreateProducaoDto producao)
+        {
+            var response = await _httpClient.PostAsJsonAsync("/api/Producoes", producao);
+            if (!response.IsSuccessStatusCode) await HandleApiError(response);
+            return await response.Content.ReadFromJsonAsync<ProducaoDto>();
+        }
     }
 }

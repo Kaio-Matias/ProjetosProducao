@@ -28,5 +28,9 @@ namespace Valedourado.Supervisor.Services
         
         // Novo método para cancelar OP
         Task<bool> CancelarProducaoAsync(int ordemProducao);
+
+        Task<List<CadastroDto>> GetCadastrosAsync();
+        Task<ProducaoDto> CreateProducaoAsync(CreateProducaoDto producao);
+
     }
 }

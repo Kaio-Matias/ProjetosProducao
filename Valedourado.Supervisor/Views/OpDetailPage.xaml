@@ -62,7 +62,7 @@
                                         <Label Grid.Column="0" Text="{Binding Operador}" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
                                         <Label Grid.Column="1" Text="{Binding Turno}" HorizontalOptions="Center" VerticalOptions="Center"/>
                                         <Label Grid.Column="2" Text="{Binding EmbProduzidas}" FontAttributes="Bold" HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,0,0" TextColor="{StaticResource Primary}"/>
-                                        <Label Grid.Column="3" Text="{Binding EmbPerdidas}" FontAttributes="Bold" HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,0,0" TextColor="{StaticResource Danger}"/>
+                                        <Label Grid.Column="3" Text="{Binding EmbPerdidas}" FontAttributes="Bold" HorizontalOptions="End" VerticalOptions="Center" Margin="10,0,0,0" TextColor="{StaticResource DangerColor}"/>
                                     </Grid>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
@@ -85,7 +85,7 @@
                                    HorizontalOptions="End" 
                                    VerticalOptions="Center" 
                                    Margin="10,0,0,0"
-                                   TextColor="{StaticResource Danger}"/>
+                                   TextColor="{StaticResource DangerColor}"/>
                         </Grid>
                     </VerticalStackLayout>
                 </Border>
@@ -115,7 +115,7 @@
                                    FontAttributes="Bold" 
                                    VerticalOptions="Center" 
                                    Margin="10,0"
-                                   TextColor="{StaticResource Danger}"/>
+                                   TextColor="{StaticResource DangerColor}"/>
                         </Grid>
                     </VerticalStackLayout>
                 </Border>
@@ -161,10 +161,10 @@
                             Command="{Binding FecharOpCommand}" 
                             IsVisible="{Binding IsOpAberta}" 
                              Style="{StaticResource DangerButton}"/>
-                   
+
                     <Button Text="Compartilhar Relatório PDF" 
                             Command="{Binding SharePdfCommand}" 
-                          Style="{StaticResource PrimaryButton}"/>
+                           Style="{StaticResource PrimaryButton}"/>
                 </VerticalStackLayout>
             </VerticalStackLayout>
         </VerticalStackLayout>
