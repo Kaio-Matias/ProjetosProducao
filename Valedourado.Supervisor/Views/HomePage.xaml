@@ -11,15 +11,30 @@
         <HorizontalStackLayout Grid.Row="0" Spacing="15" VerticalOptions="Center">
             <Image Source="logo_valedourado.png" HeightRequest="50" />
             <VerticalStackLayout VerticalOptions="Center">
-
                 <Label Text="{Binding WelcomeMessage}" Style="{StaticResource Title2}" />
-
                 <Label Text="Selecione um módulo para começar" Style="{StaticResource Caption}" />
             </VerticalStackLayout>
         </HorizontalStackLayout>
 
         <VerticalStackLayout Grid.Row="1" Spacing="15">
             <Label Text="Módulos de Gestão" Style="{StaticResource Title1}" FontSize="22" Margin="0,10" />
+
+            <Border Style="{StaticResource Card}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoToAberturaOPCommand}" />
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="Auto, *" ColumnSpacing="20">
+                    <Image Grid.Column="0" VerticalOptions="Center">
+                        <Image.Source>
+                            <FontImageSource Glyph="&#xf067;" FontFamily="FontAwesome" Color="{StaticResource Primary}" Size="24"/>
+                        </Image.Source>
+                    </Image>
+                    <VerticalStackLayout Grid.Column="1">
+                        <Label Text="Abertura de Produção" Style="{StaticResource LabelBold}" FontSize="18"/>
+                        <Label Text="Inicie uma nova ordem de produção." Style="{StaticResource Caption}"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
 
             <Border Style="{StaticResource Card}">
                 <Border.GestureRecognizers>

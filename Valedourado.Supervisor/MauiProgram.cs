@@ -53,7 +53,7 @@ public static class MauiProgram
         builder.Services.AddTransient<HistoricoViewModel>();
         builder.Services.AddTransient<OpDetailViewModel>();
         builder.Services.AddTransient<GestaoViewModel>();
-
+        builder.Services.AddTransient<AberturaViewModel>();
         // --- Registro de Views (Páginas) ---
         builder.Services.AddSingleton<AppShell>();
         builder.Services.AddSingleton<LoginPage>();
@@ -62,6 +62,7 @@ public static class MauiProgram
         builder.Services.AddTransient<HistoricoPage>();
         builder.Services.AddTransient<OpDetailPage>();
         builder.Services.AddTransient<GestaoPage>();
+        builder.Services.AddTransient<AberturaPage>();
 
         return builder.Build();
     }

@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System.Net.Http;
 
 namespace Valedourado.Supervisor.ViewModels
@@ -10,7 +11,15 @@ namespace Valedourado.Supervisor.ViewModels
         private bool isBusy;
 
         public bool IsNotBusy => !IsBusy;
-
+        [RelayCommand]
+        private async Task GoBack()
+        {
+            // Este comando navega para a página anterior ("..")
+            await MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                await Shell.Current.GoToAsync("..");
+            });
+        }
         // --- MELHORIA APLICADA: Método centralizado para executar comandos ---
         protected async Task ExecuteAsync(Func<Task> operation, string customErrorMessage = null)
         {
@@ -40,6 +49,7 @@ namespace Valedourado.Supervisor.ViewModels
             {
                 IsBusy = false;
             }
+            
         }
     }
 }

@@ -1,10 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Valedourado.Shared.Dtos;
-using Valedourado.Supervisor.Services;  
+using Valedourado.Supervisor.Services;
+using System.Collections.ObjectModel; // Certifique-se que este using existe
+using System;
+using System.Threading.Tasks;
+
 namespace Valedourado.Supervisor.ViewModels
 {
-    public class AberturaViewModel: BaseViewModel
+    // ===== CORREÇÃO AQUI (CS0260): Adicionado "partial" =====
+    public partial class AberturaViewModel : BaseViewModel
     {
         private readonly IApiService _apiService;
 
@@ -16,33 +21,48 @@ namespace Valedourado.Supervisor.ViewModels
         [ObservableProperty] private string _unidade;
         [ObservableProperty] private string _status = "Aberto";
         [ObservableProperty] private string _dataHoraAbertura;
-        [ObservableProperty] private string comentario;
-        [ObservableProperty] private string quantidadeInicial;
 
-        public ObservableObjectCollection<CadastroDto> Cadastros { get; } = new();
+        // ===== CORREÇÃO AQUI (CS0246): Trocado "ObservableObjectCollection" por "ObservableCollection" =====
+        public ObservableCollection<CadastroDto> Cadastros { get; } = new();
+
         public AberturaViewModel(IApiService apiService)
         {
             _apiService = apiService;
             var timer = new System.Threading.Timer(e => DataHoraAbertura = DateTime.Now.ToString("g"), null, 0, 1000);
         }
 
+        // ===== CORREÇÃO AQUI (CS0122): Trocado "private" por "public" =====
         [RelayCommand]
-        private async Task LoadCadastros()
+        public async Task LoadCadastros()
         {
             if (IsBusy) return;
             IsBusy = true;
             try
             {
-                Cadastros.Clear();
-                var cadastrosList = await _apiService.GetCadastrosAsync();
-                foreach (var cadastro in cadastrosList)
+                // Limpa a lista na thread principal para evitar erros
+                await MainThread.InvokeOnMainThreadAsync(() =>
                 {
-                    Cadastros.Add(cadastro);
-                }
+                    Cadastros.Clear();
+                });
+
+                var cadastrosList = await _apiService.GetCadastrosAsync();
+
+                // Popula a lista na thread principal
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    foreach (var cadastro in cadastrosList)
+                    {
+                        Cadastros.Add(cadastro);
+                    }
+                });
             }
             catch (Exception ex)
             {
-                await Shell.Current.DisplayAlert("Erro", $"Não foi possível carregar os produtos: {ex.Message}", "OK");
+                // Garante que o alerta de erro rode na thread principal
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    await Shell.Current.DisplayAlert("Erro", $"Não foi possível carregar os produtos: {ex.Message}", "OK");
+                });
             }
             finally
             {
@@ -67,15 +87,23 @@ namespace Valedourado.Supervisor.ViewModels
                     Produto = SelectedCadastro.Produto,
                     Maquina = this.Maquina,
                     Unidade = this.Unidade
-                    
                 };
                 var producaoCriada = await _apiService.CreateProducaoAsync(novaProducao);
-                await Shell.Current.DisplayAlert("Sucesso", $"Ordem de Produção Nº {producaoCriada.OrdemProducao} aberta!", "OK");
-                await Shell.Current.GoToAsync("..");
+
+                // Garante que o alerta e a navegação rodem na thread principal
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    await Shell.Current.DisplayAlert("Sucesso", $"Ordem de Produção Nº {producaoCriada.OrdemProducao} aberta!", "OK");
+                    await Shell.Current.GoToAsync("..");
+                });
             }
             catch (Exception ex)
             {
-                await Shell.Current.DisplayAlert("Erro", $"Não foi possível abrir a produção: {ex.Message}", "OK");
+                // Garante que o alerta de erro rode na thread principal
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    await Shell.Current.DisplayAlert("Erro", $"Não foi possível abrir a produção: {ex.Message}", "OK");
+                });
             }
             finally
             {
@@ -85,5 +113,4 @@ namespace Valedourado.Supervisor.ViewModels
 
         private bool CanOpenProduction() => SelectedCadastro != null && !IsBusy;
     }
-}
 }

@@ -15,6 +15,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(RegisterPage), typeof(RegisterPage));
         Routing.RegisterRoute(nameof(OpDetailPage), typeof(OpDetailPage));
         Routing.RegisterRoute(nameof(GestaoPage), typeof(GestaoPage));
+        Routing.RegisterRoute(nameof(AberturaPage), typeof(AberturaPage));
 
         // Rotas para páginas que ESTÃO na TabBar (redundante, mas boa prática)
         Routing.RegisterRoute(nameof(HomePage), typeof(HomePage));

@@ -86,14 +86,23 @@ namespace Valedourado.Supervisor.ViewModels
         [RelayCommand]
         private async Task GoToConsulta()
         {
-            // CORRETO: Usamos "//" porque HistoricoPage é uma ABA PRINCIPAL.
+            // CORRETO: Usa "//" porque HistoricoPage é uma ABA PRINCIPAL.
             await Shell.Current.GoToAsync($"//{nameof(HistoricoPage)}");
+        }
+
+        [RelayCommand]
+        private async Task GoToAberturaOP()
+        {
+            // CORREÇÃO APLICADA:
+            // Removemos o "//" para que a navegação seja relativa (empilhamento),
+            // pois 'AberturaPage' está registrada como 'GestaoPage' (não é uma aba).
+            await Shell.Current.GoToAsync(nameof(AberturaPage));
         }
 
         [RelayCommand]
         private async Task GoToGestao()
         {
-            // CORREÇÃO FINAL: Usamos SEM "//" porque GestaoPage não é uma aba principal.
+            // CORRETO: Usa SEM "//" porque GestaoPage não é uma aba principal.
             // Estamos "empilhando" a página de gestão sobre a home.
             await Shell.Current.GoToAsync(nameof(GestaoPage));
         }

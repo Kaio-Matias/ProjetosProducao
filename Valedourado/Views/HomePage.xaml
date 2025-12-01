@@ -26,21 +26,11 @@
                            Margin="0,10,0,10"/>
 
                     <Grid ColumnDefinitions="*,*"
-                          RowDefinitions="Auto,Auto"
+                          RowDefinitions="Auto,Auto,Auto"
                           ColumnSpacing="15"
                           RowSpacing="15">
 
                         <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource Card}">
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding GoToCommand}" CommandParameter="AberturaPage" />
-                            </Border.GestureRecognizers>
-                            <VerticalStackLayout Spacing="8" Padding="5">
-                                <Image Source="icon_play.png" HeightRequest="48"/>
-                                <Label Text="Abrir Produção" HorizontalOptions="Center" Style="{StaticResource Caption}" FontAttributes="Bold"/>
-                            </VerticalStackLayout>
-                        </Border>
-
-                        <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource Card}">
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding GoToCommand}" CommandParameter="OpSelectionPage" />
                             </Border.GestureRecognizers>
@@ -50,7 +40,7 @@
                             </VerticalStackLayout>
                         </Border>
 
-                        <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource Card}">
+                        <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource Card}">
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding GoToCommand}" CommandParameter="LossOpSelectionPage" />
                             </Border.GestureRecognizers>
@@ -60,7 +50,7 @@
                             </VerticalStackLayout>
                         </Border>
 
-                        <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource Card}">
+                        <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource Card}">
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding GoToCommand}" CommandParameter="EfficiencyOpSelectionPage" />
                             </Border.GestureRecognizers>
@@ -69,6 +59,7 @@
                                 <Label Text="Registro Eficiência" HorizontalOptions="Center" Style="{StaticResource Caption}" FontAttributes="Bold"/>
                             </VerticalStackLayout>
                         </Border>
+
                     </Grid>
 
                     <Button Text="Sair"
