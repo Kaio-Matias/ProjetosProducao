@@ -15,6 +15,10 @@ namespace Valedourado
             Routing.RegisterRoute(nameof(RecordLossesPage), typeof(RecordLossesPage));
             Routing.RegisterRoute(nameof(EfficiencyOpSelectionPage), typeof(EfficiencyOpSelectionPage));
             Routing.RegisterRoute(nameof(RecordEfficiencyPage), typeof(RecordEfficiencyPage));
+            Routing.RegisterRoute(nameof(PaletizacaoPage), typeof(PaletizacaoPage)); 
+            Routing.RegisterRoute(nameof(PaletizacaoOpSelectionPage), typeof(PaletizacaoOpSelectionPage));
+            Routing.RegisterRoute(nameof(PaletizacaoPage), typeof(PaletizacaoPage));
+
         }
     }
 }

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:Valedourado.ViewModels"
+             xmlns:converters="clr-namespace:Valedourado.Converters"
+             xmlns:dto="clr-namespace:Valedourado.Shared.Dtos;assembly=Valedourado.Shared"
+             x:Class="Valedourado.Views.PaletizacaoPage"
+             x:DataType="viewmodel:PaletizacaoViewModel"
+             Title="Paletização"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource Primary}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:IsNotNullConverter x:Key="IsNotNullConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto, *" RowSpacing="0">
+
+        <!-- Cabeçalho -->
+        <Grid Grid.Row="0" Padding="15,20" ColumnDefinitions="Auto, *">
+            <Button Grid.Column="0" Text="‹ Voltar" Command="{Binding VoltarCommand}" Style="{StaticResource TransparentButton}" TextColor="White"/>
+            <Label Grid.Column="1" Text="Registro de Paletes" Style="{StaticResource Title2}" TextColor="White" HorizontalOptions="Center" VerticalOptions="Center"/>
+        </Grid>
+
+        <!-- Conteúdo -->
+        <Border Grid.Row="1" BackgroundColor="{AppThemeBinding Light={StaticResource PageBackgroundColor}, Dark={StaticResource OffBlack}}" StrokeShape="RoundRectangle 30,30,0,0">
+            <Grid RowDefinitions="Auto, Auto, *">
+
+                <!-- Informações da OP -->
+                <VerticalStackLayout Grid.Row="0" Padding="20,20,20,10" Spacing="5">
+                    <Label Text="{Binding TituloPagina}" FontAttributes="Bold" FontSize="16" HorizontalOptions="Center"/>
+                    <Label Text="{Binding TotalProduzidoGeral, StringFormat='Total Produzido: {0}'}" FontSize="18" TextColor="{StaticResource Primary}" FontAttributes="Bold" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+
+                <!-- Formulário de Entrada -->
+                <VerticalStackLayout Grid.Row="1" Padding="20,10" Spacing="15">
+
+                    <!-- Opção de Último Palete -->
+                    <Grid ColumnDefinitions="*, Auto">
+                        <Label Text="É Último Palete?" VerticalOptions="Center" FontAttributes="Bold"/>
+                        <Switch Grid.Column="1" IsToggled="{Binding IsUltimoPalete}" OnColor="{StaticResource Primary}"/>
+                    </Grid>
+
+                    <!-- Entrada de Quantidade -->
+                    <Border Stroke="{StaticResource Primary}" StrokeThickness="1" StrokeShape="RoundRectangle 8" Padding="10,0" IsVisible="{Binding IsUltimoPalete}">
+                        <Entry Placeholder="Digite a qtde de caixas" 
+                               Text="{Binding QtdeUltimoPaleteText}" 
+                               Keyboard="Numeric"/>
+                    </Border>
+
+                    <!-- Opção de Bloqueio -->
+                    <Grid ColumnDefinitions="*, Auto">
+                        <Label Text="Palete Bloqueado?" VerticalOptions="Center" FontAttributes="Bold"/>
+                        <Switch Grid.Column="1" IsToggled="{Binding IsBloqueado}" OnColor="Red"/>
+                    </Grid>
+
+                    <!-- Seleção de Motivo -->
+                    <Border Stroke="Red" StrokeThickness="1" StrokeShape="RoundRectangle 8" Padding="10,0" IsVisible="{Binding IsBloqueado}">
+                        <Picker Title="Selecione o Motivo"
+                                ItemsSource="{Binding MotivosBloqueio}"
+                                SelectedItem="{Binding MotivoBloqueioSelecionado}"/>
+                    </Border>
+
+                    <!-- BOTÃO DE AÇÃO -->
+                    <Button Text="ADICIONAR PALETE" 
+                            Command="{Binding AdicionarPaleteCommand}"
+                            Style="{StaticResource PrimaryButton}"
+                            HeightRequest="55"
+                            FontSize="16"
+                            FontAttributes="Bold"
+                            CornerRadius="25"
+                            IsEnabled="{Binding IsNotBusy}"/>
+
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" 
+                                       IsVisible="{Binding IsBusy}"
+                                       Color="{StaticResource Primary}"
+                                       HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+
+                <!-- Lista de Histórico (AJUSTADO) -->
+                <CollectionView Grid.Row="2" ItemsSource="{Binding Paletes}" Margin="15,0,15,15">
+                    <CollectionView.Header>
+                        <Label Text="Histórico Recente" FontAttributes="Bold" TextColor="Gray" Margin="0,10"/>
+                    </CollectionView.Header>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="dto:PaleteDto">
+                            <!-- MARGIN AUMENTADA AQUI: 0,8 (Top/Bottom) para separar melhor -->
+                            <Border Padding="12" Margin="0,8" StrokeShape="RoundRectangle 10" BackgroundColor="White" StrokeThickness="0">
+                                <Border.Shadow>
+                                    <Shadow Brush="Black" Offset="0,2" Radius="3" Opacity="0.1"/>
+                                </Border.Shadow>
+                                <Grid ColumnDefinitions="Auto, *, Auto" ColumnSpacing="12">
+
+                                    <Border BackgroundColor="{StaticResource Primary}" WidthRequest="40" HeightRequest="40" StrokeShape="RoundRectangle 20" VerticalOptions="Center">
+                                        <Label Text="{Binding N_Palete}" TextColor="White" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold"/>
+                                    </Border>
+
+                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                        <Label Text="{Binding Produto}" FontSize="13" LineBreakMode="TailTruncation" MaxLines="2"/>
+                                        <Label Text="{Binding QtdeProduzida, StringFormat='Acumulado: {0}'}" FontSize="11" TextColor="Gray"/>
+
+                                        <!-- CORREÇÃO: Usando Triggers para visibilidade em vez de Converter -->
+                                        <Label Text="{Binding Bloqueio, StringFormat='BLOQUEADO: {0}'}" 
+                                               TextColor="Red" 
+                                               FontSize="11" 
+                                               FontAttributes="Bold">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding Bloqueio}" Value="{x:Null}">
+                                                    <Setter Property="IsVisible" Value="False" />
+                                                </DataTrigger>
+                                                <DataTrigger TargetType="Label" Binding="{Binding Bloqueio}" Value="">
+                                                    <Setter Property="IsVisible" Value="False" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                    </VerticalStackLayout>
+
+                                    <VerticalStackLayout Grid.Column="2" HorizontalOptions="End" VerticalOptions="Center">
+                                        <Label Text="{Binding QtdePorPalete, StringFormat='{0} Cxs'}" FontAttributes="Bold" TextColor="{StaticResource Secondary}"/>
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

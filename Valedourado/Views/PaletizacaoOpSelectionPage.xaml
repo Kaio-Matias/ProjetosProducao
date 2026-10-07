@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:Valedourado.ViewModels"
+             xmlns:model="clr-namespace:Valedourado.Shared.Dtos;assembly=Valedourado.Shared"
+             x:Class="Valedourado.Views.PaletizacaoOpSelectionPage"
+             x:DataType="viewmodel:PaletizacaoOpSelectionViewModel"
+             Title="Selecionar OP"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource Primary}">
+
+    <Grid RowDefinitions="Auto, *" RowSpacing="0">
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Padding="15,20" ColumnDefinitions="Auto, *">
+            <Button Grid.Column="0" Text="‹ Voltar" Command="{Binding GoBackCommand}" Style="{StaticResource TransparentButton}" TextColor="White"/>
+            <Label Grid.Column="1" Text="Selecione a OP" Style="{StaticResource Title2}" TextColor="White" HorizontalOptions="Center" VerticalOptions="Center"/>
+        </Grid>
+
+        <!-- Lista de OPs -->
+        <Border Grid.Row="1" BackgroundColor="{AppThemeBinding Light={StaticResource PageBackgroundColor}, Dark={StaticResource OffBlack}}" StrokeShape="RoundRectangle 30,30,0,0">
+            <RefreshView IsRefreshing="{Binding IsBusy}" Command="{Binding LoadProducoesCommand}" Margin="0,15,0,0">
+                <CollectionView ItemsSource="{Binding Producoes}" SelectionMode="None">
+                    <CollectionView.EmptyView>
+                        <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
+                            <Label Text="Nenhuma Ordem de Produção Aberta" TextColor="Gray" HorizontalOptions="Center"/>
+                            <Button Text="Recarregar" Command="{Binding LoadProducoesCommand}" Style="{StaticResource SecondaryButton}"/>
+                        </VerticalStackLayout>
+                    </CollectionView.EmptyView>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:ProducaoDto">
+                            <Grid Padding="20,8">
+                                <Border StrokeShape="RoundRectangle 10" BackgroundColor="White" Padding="15">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PaletizacaoOpSelectionViewModel}}, Path=SelectProducaoCommand}" CommandParameter="{Binding .}"/>
+                                    </Border.GestureRecognizers>
+
+                                    <Grid RowDefinitions="Auto, Auto, Auto" ColumnDefinitions="*, Auto" RowSpacing="5">
+                                        <!-- Linha 1: Num OP e Status -->
+                                        <Label Grid.Row="0" Grid.Column="0" Text="{Binding OrdemProducao, StringFormat='OP: {0}'}" FontAttributes="Bold" FontSize="16" TextColor="{StaticResource Primary}"/>
+                                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding Status}" TextColor="{StaticResource Secondary}" FontSize="12" VerticalOptions="Center"/>
+
+                                        <!-- Linha 2: Produto -->
+                                        <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Produto}" FontSize="15" LineBreakMode="TailTruncation"/>
+
+                                        <!-- Linha 3: Maquina e Data (CORRIGIDO AQUI) -->
+                                        <HorizontalStackLayout Grid.Row="2" Grid.Column="0" Spacing="10">
+                                            <Label Text="{Binding Maquina}" TextColor="Gray" FontSize="12"/>
+                                            <Label Text="|" TextColor="LightGray"/>
+                                            <!-- AQUI ESTAVA O ERRO: Trocado DataInicio por DataHoraAbertura -->
+                                            <Label Text="{Binding DataHoraAbertura, StringFormat='{0:dd/MM HH:mm}'}" TextColor="Gray" FontSize="12"/>
+                                        </HorizontalStackLayout>
+
+                                        <!-- Ícone de Seta -->
+                                        <Label Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Text="›" FontSize="24" TextColor="LightGray" VerticalOptions="Center" HorizontalOptions="End"/>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+        </Border>
+    </Grid>
+
+</ContentPage>

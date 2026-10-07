@@ -50,6 +50,7 @@
 		<DefaultLanguage>pt-br</DefaultLanguage>
 		<PackageCertificateThumbprint>9E43E7A107DE27093692FEEED66A6CFA9859758A</PackageCertificateThumbprint>
 		<AppInstallerUri>E:\Projetos para win</AppInstallerUri>
+		<Platforms>AnyCPU;ARM32</Platforms>
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Valedourado.Shared\Valedourado.Shared.csproj" />

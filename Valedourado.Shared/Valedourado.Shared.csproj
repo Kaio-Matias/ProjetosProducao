@@ -6,6 +6,7 @@
 		<Nullable>enable</Nullable>
 		<PublishTrimmed>false</PublishTrimmed>
 		<OutputType>Library</OutputType>
+		<Platforms>AnyCPU;ARM32</Platforms>
 	</PropertyGroup>
 	
 </Project>

@@ -112,5 +112,30 @@ namespace Valedourado.Services
 
             return await response.Content.ReadFromJsonAsync<List<EficienciaDto>>();
         }
+        public async Task<List<PaleteDto>> GetPaletesPorOPAsync(int ordemProducao)
+        {
+            var response = await _httpClient.GetAsync($"/api/Paletizacao/op/{ordemProducao}");
+            if (response.StatusCode == HttpStatusCode.NotFound) return new List<PaleteDto>();
+            if (!response.IsSuccessStatusCode) await HandleApiError(response);
+            return await response.Content.ReadFromJsonAsync<List<PaleteDto>>();
+        }
+
+        public async Task<PaleteDto> SalvarPaleteAsync(CreatePaleteDto palete)
+        {
+            var response = await _httpClient.PostAsJsonAsync("/api/Paletizacao", palete);
+            if (!response.IsSuccessStatusCode) await HandleApiError(response);
+            return await response.Content.ReadFromJsonAsync<PaleteDto>();
+        }
+
+        // Lógica adaptada: Já que não vamos bipar, buscamos o cadastro pelo NOME do produto que está na OP
+        public async Task<CadastroDto> GetCadastroPorProdutoAsync(string nomeProduto)
+        {
+            // Nota: O ideal seria ter um endpoint específico no backend para buscar por nome ou ID.
+            // Como paliativo, vamos buscar todos e filtrar na memória (assumindo que a lista não é gigante),
+            // ou você deve criar um endpoint específico no backend: /api/Cadastro/produto/{nome}
+
+            var todosCadastros = await GetCadastrosAsync();
+            return todosCadastros.FirstOrDefault(c => c.Produto.Equals(nomeProduto, StringComparison.OrdinalIgnoreCase));
+        }
     }
 }

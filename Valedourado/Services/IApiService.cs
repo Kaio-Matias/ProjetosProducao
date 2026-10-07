@@ -16,5 +16,8 @@ namespace Valedourado.Services
         // ===== MÉTODOS ADICIONADOS =====
         Task<List<PerdasDto>> GetPerdasPorOpEOperadorAsync(int ordemProducao, string operador);
         Task<List<EficienciaDto>> GetEficienciaPorOpEOperadorAsync(int ordemProducao, string operador);
+        Task<List<PaleteDto>> GetPaletesPorOPAsync(int ordemProducao);
+        Task<PaleteDto> SalvarPaleteAsync(CreatePaleteDto palete);
+        Task<CadastroDto> GetCadastroPorProdutoAsync(string nomeProduto);
     }
 }

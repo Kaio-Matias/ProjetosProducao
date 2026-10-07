@@ -71,6 +71,8 @@ namespace Valedourado
             builder.Services.AddTransient<RecordLossesViewModel>();
             builder.Services.AddTransient<EfficiencyOpSelectionViewModel>();
             builder.Services.AddTransient<RecordEfficiencyViewModel>();
+            builder.Services.AddTransient<PaletizacaoViewModel>();  
+            builder.Services.AddTransient<PaletizacaoOpSelectionViewModel>();  
 
             // Registro de Páginas (Views)
             builder.Services.AddTransient<LoginPage>();
@@ -82,6 +84,9 @@ namespace Valedourado
             builder.Services.AddTransient<RecordLossesPage>();
             builder.Services.AddTransient<EfficiencyOpSelectionPage>();
             builder.Services.AddTransient<RecordEfficiencyPage>();
+            builder.Services.AddTransient<PaletizacaoPage>();
+            builder.Services.AddTransient<PaletizacaoOpSelectionPage>();
+
 
 
             return builder.Build();

@@ -12,10 +12,10 @@ namespace Valedourado.Models
         public int Id { get; set; }
 
         [JsonPropertyName("nome")]
-        public string Nome { get; set; }
+        public string? Nome { get; set; }
 
         [JsonPropertyName("cargo")]
-        public string Cargo { get; set; }
+        public string? Cargo { get; set; }
 
         [JsonPropertyName("matricula")]
         public int? Matricula { get; set; }

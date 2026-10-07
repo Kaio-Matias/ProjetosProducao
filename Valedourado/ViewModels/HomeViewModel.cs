@@ -17,6 +17,7 @@ namespace Valedourado.ViewModels
         private async Task GoTo(string route)
         {
             if (string.IsNullOrWhiteSpace(route)) return;
+            // O AppShell deve ter as rotas registradas com esses nomes
             await Shell.Current.GoToAsync(route);
         }
 

@@ -12,19 +12,19 @@ namespace Valedourado.Models
         public int Id { get; set; }
 
         [JsonPropertyName("codProduto")]
-        public string CodProduto { get; set; }
+        public string? CodProduto { get; set; }
 
         [JsonPropertyName("produto")]
-        public string Produto { get; set; }
+        public string? Produto { get; set; }
 
         [JsonPropertyName("codBarra")]
-        public string CodBarra { get; set; }
+        public string? CodBarra { get; set; }
 
         [JsonPropertyName("maquina")]
-        public string Maquina { get; set; }
+        public string? Maquina { get; set; }
 
         [JsonPropertyName("unidade")]
-        public string Unidade { get; set; }
+        public string? Unidade { get; set; }
 
         [JsonPropertyName("qtdeCaixa")]
         public int QtdeCaixa { get; set; }

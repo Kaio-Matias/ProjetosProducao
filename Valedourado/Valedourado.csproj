@@ -37,9 +37,14 @@
 		<GenerateTestArtifacts>True</GenerateTestArtifacts>
 		<GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
 		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+		<Platforms>AnyCPU;ARM32</Platforms>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
+	  <AndroidPackageFormat>apk</AndroidPackageFormat>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|ARM32'">
 	  <AndroidPackageFormat>apk</AndroidPackageFormat>
 	</PropertyGroup>
 
@@ -67,14 +72,20 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<MauiXaml Update="Resources\Resources\Styles\Colors.xaml">
+		<MauiXaml Update="Resources\Styles\Colors.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="Resources\Resources\Styles\Styles.xaml">
+		<MauiXaml Update="Resources\Styles\Styles.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="Resources\Resources\Styles\ValedouradoStyles.xaml">
+		<MauiXaml Update="Resources\Styles\ValedouradoStyles.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\PaletizacaoOpSelectionPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\PaletizacaoPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 	</ItemGroup>
 

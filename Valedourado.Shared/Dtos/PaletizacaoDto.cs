@@ -1,7 +1,24 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Valedourado.Shared.Dtos
 {
+    public class PaleteDto
+    {
+        public int Id { get; set; }
+        public int N_Palete { get; set; }
+        public int OrdemProducao { get; set; }
+        public string? CodigoProduto { get; set; }
+        public string? Produto { get; set; }
+        public int QtdePorPalete { get; set; }
+        public string? Usuario { get; set; }
+        public int QtdeCx { get; set; }
+        public int QtdeProduzida { get; set; }
+        public string? Bloqueio { get; set; }
+        public string? Unidade { get; set; }
+        public DateTime DataHoraPaletizacao { get; set; }
+    }
+
     public class CreatePaleteDto
     {
         [Required]
@@ -22,19 +39,4 @@ namespace Valedourado.Shared.Dtos
         public string? Bloqueio { get; set; }
     }
 
-    public class PaleteDto
-    {
-        public int Id { get; set; }
-        public int N_Palete { get; set; }
-        public int OrdemProducao { get; set; }
-        public string? CodigoProduto { get; set; }
-        public string? Produto { get; set; }
-        public int QtdePorPalete { get; set; }
-        public string? Usuario { get; set; }
-        public int QtdeCx { get; set; }
-        public int QtdeProduzida { get; set; }
-        public string? Bloqueio { get; set; }
-        public string? Unidade { get; set; }
-        public DateTime DataHoraPaletizacao { get; set; }
-    }
 }

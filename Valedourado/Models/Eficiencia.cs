@@ -11,13 +11,13 @@ namespace Valedourado.Models
         public int OrdemProducao { get; set; }
 
         [JsonPropertyName("motivo")]
-        public string Motivo { get; set; }
+        public string? Motivo { get; set; }
 
         [JsonPropertyName("tempo")]
         public TimeSpan Tempo { get; set; }
 
 
         [JsonPropertyName("operador")]
-        public string Operador { get; set; }
+        public string? Operador { get; set; }
     }
 }

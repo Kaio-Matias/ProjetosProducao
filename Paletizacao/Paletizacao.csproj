@@ -9,6 +9,8 @@
 
     <ApplicationIcon>Resources\logo_valedourado.ico</ApplicationIcon>
 
+    <Platforms>AnyCPU;ARM32</Platforms>
+
   </PropertyGroup>
 
 	<ItemGroup>

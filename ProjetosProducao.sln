@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36401.2
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11222.16 d18.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Valedourado.Supervisor", "Valedourado.Supervisor\Valedourado.Supervisor.csproj", "{CF54F830-33EF-4459-A76B-09E3F769E999}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -23,29 +23,51 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|ARM32 = Debug|ARM32
 		Release|Any CPU = Release|Any CPU
+		Release|ARM32 = Release|ARM32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{CF54F830-33EF-4459-A76B-09E3F769E999}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CF54F830-33EF-4459-A76B-09E3F769E999}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF54F830-33EF-4459-A76B-09E3F769E999}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{CF54F830-33EF-4459-A76B-09E3F769E999}.Debug|ARM32.ActiveCfg = Debug|ARM32
+		{CF54F830-33EF-4459-A76B-09E3F769E999}.Debug|ARM32.Build.0 = Debug|ARM32
+		{CF54F830-33EF-4459-A76B-09E3F769E999}.Debug|ARM32.Deploy.0 = Debug|ARM32
 		{CF54F830-33EF-4459-A76B-09E3F769E999}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF54F830-33EF-4459-A76B-09E3F769E999}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CF54F830-33EF-4459-A76B-09E3F769E999}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{CF54F830-33EF-4459-A76B-09E3F769E999}.Release|ARM32.ActiveCfg = Release|ARM32
+		{CF54F830-33EF-4459-A76B-09E3F769E999}.Release|ARM32.Build.0 = Release|ARM32
 		{63D529A0-C928-4F88-A672-9A4DD903B167}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{63D529A0-C928-4F88-A672-9A4DD903B167}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63D529A0-C928-4F88-A672-9A4DD903B167}.Debug|ARM32.ActiveCfg = Debug|ARM32
+		{63D529A0-C928-4F88-A672-9A4DD903B167}.Debug|ARM32.Build.0 = Debug|ARM32
+		{63D529A0-C928-4F88-A672-9A4DD903B167}.Debug|ARM32.Deploy.0 = Debug|ARM32
 		{63D529A0-C928-4F88-A672-9A4DD903B167}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63D529A0-C928-4F88-A672-9A4DD903B167}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63D529A0-C928-4F88-A672-9A4DD903B167}.Release|ARM32.ActiveCfg = Release|ARM32
+		{63D529A0-C928-4F88-A672-9A4DD903B167}.Release|ARM32.Build.0 = Release|ARM32
+		{63D529A0-C928-4F88-A672-9A4DD903B167}.Release|ARM32.Deploy.0 = Release|ARM32
 		{F70C6A47-3069-477C-92DC-F20FFCB39E46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F70C6A47-3069-477C-92DC-F20FFCB39E46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F70C6A47-3069-477C-92DC-F20FFCB39E46}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F70C6A47-3069-477C-92DC-F20FFCB39E46}.Debug|ARM32.ActiveCfg = Debug|ARM32
+		{F70C6A47-3069-477C-92DC-F20FFCB39E46}.Debug|ARM32.Build.0 = Debug|ARM32
+		{F70C6A47-3069-477C-92DC-F20FFCB39E46}.Debug|ARM32.Deploy.0 = Debug|ARM32
 		{F70C6A47-3069-477C-92DC-F20FFCB39E46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F70C6A47-3069-477C-92DC-F20FFCB39E46}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F70C6A47-3069-477C-92DC-F20FFCB39E46}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{F70C6A47-3069-477C-92DC-F20FFCB39E46}.Release|ARM32.ActiveCfg = Release|ARM32
+		{F70C6A47-3069-477C-92DC-F20FFCB39E46}.Release|ARM32.Build.0 = Release|ARM32
 		{334099AA-63EA-4CB4-AB91-4A83DC24AE68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{334099AA-63EA-4CB4-AB91-4A83DC24AE68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{334099AA-63EA-4CB4-AB91-4A83DC24AE68}.Debug|ARM32.ActiveCfg = Debug|ARM32
+		{334099AA-63EA-4CB4-AB91-4A83DC24AE68}.Debug|ARM32.Build.0 = Debug|ARM32
 		{334099AA-63EA-4CB4-AB91-4A83DC24AE68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{334099AA-63EA-4CB4-AB91-4A83DC24AE68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{334099AA-63EA-4CB4-AB91-4A83DC24AE68}.Release|ARM32.ActiveCfg = Release|ARM32
+		{334099AA-63EA-4CB4-AB91-4A83DC24AE68}.Release|ARM32.Build.0 = Release|ARM32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

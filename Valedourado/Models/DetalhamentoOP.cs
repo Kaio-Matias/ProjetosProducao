@@ -11,10 +11,10 @@ namespace Valedourado.Models
         public int OrdemProducao { get; set; }
 
         [JsonPropertyName("operador")]
-        public string Operador { get; set; }
+        public string? Operador { get; set; }
 
         [JsonPropertyName("turno")]
-        public string Turno { get; set; }
+        public string? Turno { get; set; }
 
         [JsonPropertyName("embProcessadas")]
         public int EmbProcessadas { get; set; }
